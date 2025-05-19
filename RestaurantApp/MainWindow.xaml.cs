@@ -19,6 +19,9 @@ namespace RestaurantApp
         private readonly ProductService _productService;
         private readonly UserService _userService;
         private readonly OrderService _orderService;
+        private readonly CartService _cartService;
+
+        private bool _isLoadingCart = false;
 
         private ShoppingCart _shoppingCart = new ShoppingCart();
 
@@ -34,7 +37,8 @@ namespace RestaurantApp
             _categoryService = new CategoryService(_databaseService);
             _productService = new ProductService(_databaseService);
             _userService = new UserService(_databaseService);
-            _orderService = new OrderService(_databaseService, _productService);
+            _cartService = new CartService(_databaseService, _productService);
+            _orderService = new OrderService(_databaseService, _productService, _cartService);
 
             CartClickCommand = new RelayCommand(_ => CartButton_Click(null, null));
             _shoppingCart.Items.CollectionChanged += ShoppingCart_CollectionChanged;
@@ -44,10 +48,17 @@ namespace RestaurantApp
             UpdateNavigationBar();
         }
 
-        private void ShoppingCart_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void ShoppingCart_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ShoppingCartItemCount));
+
+            // Save cart changes if the user is logged in and we're not in the process of loading
+            if (_userService.IsAuthenticated && !_isLoadingCart)
+            {
+                _cartService.SaveCartItems(_userService.CurrentUser.UserId, _shoppingCart);
+            }
         }
+
 
         private void CategoriesButton_Click(object sender, RoutedEventArgs e)
         {
@@ -73,9 +84,27 @@ namespace RestaurantApp
             MainContent.Content = searchView;
         }
 
+        private void OnLoginSuccess()
+        {
+            // Load the user's saved cart
+            _isLoadingCart = true;
+            try
+            {
+                ShoppingCart savedCart = _cartService.LoadCartItems(_userService.CurrentUser.UserId);
+                _shoppingCart.ReplaceWith(savedCart);
+            }
+            finally
+            {
+                _isLoadingCart = false;
+            }
+
+            // Navigate to the menu view
+            RefreshMainWindow();
+        }
+
         private void NavigateToLogin()
         {
-            var loginViewModel = new LoginViewModel(_userService, NavigateToRegister, RefreshMainWindow);
+            var loginViewModel = new LoginViewModel(_userService, NavigateToRegister, OnLoginSuccess);
             var loginView = new LoginView();
             loginView.DataContext = loginViewModel;
             MainContent.Content = loginView;
@@ -119,7 +148,14 @@ namespace RestaurantApp
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
+            // Save cart to database before logout if user is authenticated
+            if (_userService.IsAuthenticated)
+            {
+                _cartService.SaveCartItems(_userService.CurrentUser.UserId, _shoppingCart);
+            }
+
             _userService.Logout();
+            _shoppingCart.Clear(); // Clear the cart in memory
             RefreshMainWindow();
         }
 

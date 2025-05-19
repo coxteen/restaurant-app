@@ -9,7 +9,7 @@ namespace RestaurantApp.ViewModels
     {
         private readonly UserService _userService;
         private readonly Action _navigateToRegister;
-        private readonly Action _navigateToMain;
+        private readonly Action _onLoginSuccess;
         private string _email;
         private string _password;
         private string _errorMessage;
@@ -35,11 +35,11 @@ namespace RestaurantApp.ViewModels
         public ICommand LoginCommand { get; }
         public ICommand RegisterNavigationCommand { get; }
 
-        public LoginViewModel(UserService userService, Action navigateToRegister, Action navigateToMain)
+        public LoginViewModel(UserService userService, Action navigateToRegister, Action onLoginSuccess)
         {
             _userService = userService;
             _navigateToRegister = navigateToRegister;
-            _navigateToMain = navigateToMain;
+            _onLoginSuccess = onLoginSuccess;
 
             LoginCommand = new RelayCommand(ExecuteLogin, CanExecuteLogin);
             RegisterNavigationCommand = new RelayCommand(_ => _navigateToRegister());
@@ -54,7 +54,7 @@ namespace RestaurantApp.ViewModels
         {
             if (_userService.Login(Email, Password))
             {
-                _navigateToMain();
+                _onLoginSuccess();
             }
             else
             {

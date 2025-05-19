@@ -11,11 +11,13 @@ namespace RestaurantApp.Services
     {
         private readonly DatabaseService _databaseService;
         private readonly ProductService _productService;
+        private readonly CartService _cartService;
 
-        public OrderService(DatabaseService databaseService, ProductService productService)
+        public OrderService(DatabaseService databaseService, ProductService productService, CartService cartService)
         {
             _databaseService = databaseService;
             _productService = productService;
+            _cartService = cartService;
         }
 
         public ShoppingCart CalculateOrderCosts(ShoppingCart cart, User user)
@@ -120,7 +122,7 @@ namespace RestaurantApp.Services
                                 command.ExecuteNonQuery();
                             }
                         }
-
+                        _cartService.ClearCartItems(user.UserId);
                         transaction.Commit();
                         return orderId;
                     }

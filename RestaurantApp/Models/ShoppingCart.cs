@@ -5,15 +5,47 @@ using System.Runtime.CompilerServices;
 
 namespace RestaurantApp.Models
 {
-    public class ShoppingCart
+    public class ShoppingCart : INotifyPropertyChanged
     {
-        public ObservableCollection<CartItem> Items { get; set; } = new ObservableCollection<CartItem>();
+        private ObservableCollection<CartItem> _items = new ObservableCollection<CartItem>();
+        private decimal _deliveryFee;
+        private decimal _discount;
+
+        public ObservableCollection<CartItem> Items
+        {
+            get { return _items; }
+            set
+            {
+                _items = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Subtotal));
+                OnPropertyChanged(nameof(Total));
+            }
+        }
 
         public decimal Subtotal => Items.Sum(item => item.TotalPrice);
 
-        // These will be calculated based on order settings
-        public decimal DeliveryFee { get; set; }
-        public decimal Discount { get; set; }
+        public decimal DeliveryFee
+        {
+            get { return _deliveryFee; }
+            set
+            {
+                _deliveryFee = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
+
+        public decimal Discount
+        {
+            get { return _discount; }
+            set
+            {
+                _discount = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(Total));
+            }
+        }
 
         public decimal Total => Subtotal + DeliveryFee - Discount;
 
@@ -35,6 +67,9 @@ namespace RestaurantApp.Models
                     Quantity = quantity
                 });
             }
+
+            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(Total));
         }
 
         public void UpdateItemQuantity(int productId, int quantity)
@@ -51,6 +86,9 @@ namespace RestaurantApp.Models
                 {
                     item.Quantity = quantity;
                 }
+
+                OnPropertyChanged(nameof(Subtotal));
+                OnPropertyChanged(nameof(Total));
             }
         }
 
@@ -61,6 +99,8 @@ namespace RestaurantApp.Models
             if (item != null)
             {
                 Items.Remove(item);
+                OnPropertyChanged(nameof(Subtotal));
+                OnPropertyChanged(nameof(Total));
             }
         }
 
@@ -69,29 +109,28 @@ namespace RestaurantApp.Models
             Items.Clear();
             DeliveryFee = 0;
             Discount = 0;
+
+            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(Total));
         }
-    }
 
-    public class CartItem : INotifyPropertyChanged
-    {
-        private int _quantity;
-
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
-        public decimal UnitPrice { get; set; }
-
-        public int Quantity
+        public void ReplaceWith(ShoppingCart other)
         {
-            get { return _quantity; }
-            set
-            {
-                _quantity = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(TotalPrice));
-            }
-        }
+            if (other == null) return;
 
-        public decimal TotalPrice => UnitPrice * Quantity;
+            Clear();
+
+            foreach (var item in other.Items)
+            {
+                Items.Add(item);
+            }
+
+            DeliveryFee = other.DeliveryFee;
+            Discount = other.Discount;
+
+            OnPropertyChanged(nameof(Subtotal));
+            OnPropertyChanged(nameof(Total));
+        }
 
         public event PropertyChangedEventHandler PropertyChanged;
 
