@@ -1,0 +1,20 @@
+﻿<Application x:Class="RestaurantApp.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:helpers="clr-namespace:RestaurantApp.Helpers"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+        <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
+        <helpers:ProductQuantityConverter x:Key="ProductQuantityConverter"/>
+        <helpers:IntToVisibilityConverter x:Key="IntToVisibilityConverter"/>
+        <helpers:StringToOrderStatusConverter x:Key="StringToOrderStatusConverter"/>
+        <helpers:OrderItemTotalConverter x:Key="OrderItemTotalConverter"/>
+        <helpers:OrderStatusToVisibilityConverter x:Key="OrderStatusToVisibilityConverter"/>
+        <helpers:StockStatusConverter x:Key="StockStatusConverter"/>
+        <helpers:PortionsLeftConverter x:Key="PortionsLeftConverter"/>
+        <helpers:BoolToStringConverter x:Key="BoolToStringConverter"/>
+        <helpers:OrderItemTotalMultiConverter x:Key="OrderItemTotalMultiConverter"/>
+    </Application.Resources>
+</Application>
