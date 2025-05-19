@@ -9,8 +9,8 @@
         <StackPanel Orientation="Horizontal">
             <TextBlock Text="🛒" FontSize="14" VerticalAlignment="Center"/>
             <TextBlock Text="Cart" Margin="5,0,0,0" VerticalAlignment="Center"/>
-            <Border Background="#4CAF50" CornerRadius="3" Margin="5,0,0,0" 
-                    Visibility="{Binding ItemCount, Converter={StaticResource IntToVisibilityConverter}}" Height="12">
+            <Border Background="#4CAF50" CornerRadius="10" Margin="5,0,0,0" 
+                    Visibility="{Binding ItemCount, Converter={StaticResource IntToVisibilityConverter}}">
                 <TextBlock Text="{Binding ItemCount}" Foreground="White" Margin="5,0" FontSize="10"/>
             </Border>
         </StackPanel>
