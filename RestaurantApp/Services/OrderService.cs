@@ -304,6 +304,8 @@ namespace RestaurantApp.Services
         // Method to update product quantities when an order status changes to 'Preparing'
         public bool UpdateProductQuantities(int orderId)
         {
+            Console.WriteLine($"Starting quantity update for order {orderId}");
+
             using (NpgsqlConnection connection = _databaseService.GetConnection())
             {
                 connection.Open();
@@ -313,28 +315,59 @@ namespace RestaurantApp.Services
                 {
                     try
                     {
-                        // Use the stored procedure instead of manual updates
-                        string query = "SELECT update_product_quantities_for_order(@OrderId)";
+                        // Get order items
+                        List<OrderItem> items = GetOrderItems(orderId);
+                        Console.WriteLine($"Found {items.Count} items in order {orderId}");
 
-                        using (NpgsqlCommand command = new NpgsqlCommand(query, connection, transaction))
+                        // Update product quantities
+                        foreach (var item in items)
                         {
-                            command.Parameters.AddWithValue("@OrderId", orderId);
-                            bool success = (bool)command.ExecuteScalar();
+                            var product = _productService.GetProductById(item.ProductId);
 
-                            if (!success)
+                            if (product != null)
                             {
-                                transaction.Rollback();
-                                return false;
+                                // Calculate quantity to deduct in grams
+                                int quantityToDeduct = item.Quantity * product.PortionSize;
+                                Console.WriteLine($"Product {product.Name} (ID: {product.ProductId}): Current stock: {product.TotalQuantity}g, Deducting: {quantityToDeduct}g");
+
+                                if (product.TotalQuantity < quantityToDeduct)
+                                {
+                                    Console.WriteLine($"Not enough stock for product {product.Name}. Required: {quantityToDeduct}g, Available: {product.TotalQuantity}g");
+                                    transaction.Rollback();
+                                    return false;
+                                }
+
+                                string updateQuery = @"
+                            UPDATE products
+                            SET totalquantity = totalquantity - @QuantityToDeduct,
+                                isavailable = CASE WHEN (totalquantity - @QuantityToDeduct) <= 0 THEN FALSE ELSE isavailable END
+                            WHERE productid = @ProductId";
+
+                                using (NpgsqlCommand command = new NpgsqlCommand(updateQuery, connection, transaction))
+                                {
+                                    command.Parameters.AddWithValue("@ProductId", item.ProductId);
+                                    command.Parameters.AddWithValue("@QuantityToDeduct", quantityToDeduct);
+
+                                    int rowsAffected = command.ExecuteNonQuery();
+                                    Console.WriteLine($"Update result for product {product.Name}: Rows affected: {rowsAffected}");
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Product with ID {item.ProductId} not found!");
                             }
                         }
 
                         transaction.Commit();
+                        Console.WriteLine("Transaction committed successfully");
                         return true;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        Console.WriteLine($"Error updating product quantities: {ex.Message}");
+                        Console.WriteLine($"Stack trace: {ex.StackTrace}");
                         transaction.Rollback();
-                        throw;
+                        return false;
                     }
                 }
             }

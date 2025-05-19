@@ -1,0 +1,462 @@
+-- Drop existing tables if they exist
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS product_allergens CASCADE;
+DROP TABLE IF EXISTS menu_products CASCADE;
+DROP TABLE IF EXISTS menus CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS allergens CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+
+-- Create categories table
+CREATE TABLE categories (
+    categoryid SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT
+);
+
+-- Create allergens table
+CREATE TABLE allergens (
+    allergenid SERIAL PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    description TEXT
+);
+
+-- Create products table
+CREATE TABLE products (
+    productid SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    portionsize INT NOT NULL, -- in grams
+    totalquantity INT NOT NULL, -- total available in grams
+    categoryid INT REFERENCES categories(categoryid),
+    isavailable BOOLEAN DEFAULT TRUE
+);
+
+-- Create product_allergens table (Many-to-Many)
+CREATE TABLE product_allergens (
+    productid INT REFERENCES products(productid) ON DELETE CASCADE,
+    allergenid INT REFERENCES allergens(allergenid) ON DELETE CASCADE,
+    PRIMARY KEY (productid, allergenid)
+);
+
+-- Create menus table (Menu = combination of products)
+CREATE TABLE menus (
+    menuid SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    price DECIMAL(10, 2) NOT NULL,
+    categoryid INT REFERENCES categories(categoryid),
+    isavailable BOOLEAN DEFAULT TRUE
+);
+
+-- Create menu_products table (Many-to-Many with custom portion sizes)
+CREATE TABLE menu_products (
+    menuid INT REFERENCES menus(menuid) ON DELETE CASCADE,
+    productid INT REFERENCES products(productid) ON DELETE CASCADE,
+    portionsize INT NOT NULL, -- custom portion size for this menu-product combination
+    PRIMARY KEY (menuid, productid)
+);
+
+-- Create users table
+CREATE TABLE users (
+    userid SERIAL PRIMARY KEY,
+    firstname VARCHAR(50) NOT NULL,
+    lastname VARCHAR(50) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    passwordhash VARCHAR(255) NOT NULL,
+    phonenumber VARCHAR(20),
+    deliveryaddress TEXT,
+    usertype VARCHAR(20) NOT NULL -- "Customer" or "Employee"
+);
+
+-- Create orders table
+CREATE TABLE orders (
+    orderid SERIAL PRIMARY KEY,
+    userid INT REFERENCES users(userid),
+    orderdate TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    totalamount DECIMAL(10, 2) NOT NULL,
+    deliveryfee DECIMAL(10, 2) DEFAULT 0,
+    discount DECIMAL(10, 2) DEFAULT 0,
+    status VARCHAR(20) NOT NULL DEFAULT 'Registered', -- Registered, Preparing, Dispatched, Delivered, Cancelled
+    estimateddeliverytime TIMESTAMP,
+    deliveryaddress TEXT NOT NULL
+);
+
+-- Create order_items table
+CREATE TABLE order_items (
+    orderitemid SERIAL PRIMARY KEY,
+    orderid INT REFERENCES orders(orderid) ON DELETE CASCADE,
+    -- This can be either a product or a menu
+    productid INT REFERENCES products(productid) NULL,
+    menuid INT REFERENCES menus(menuid) NULL,
+    quantity INT NOT NULL,
+    unitprice DECIMAL(10, 2) NOT NULL,
+    CHECK (productid IS NOT NULL OR menuid IS NOT NULL) -- At least one must be non-null
+);
+
+-- Create indexes for better performance
+CREATE INDEX idx_products_category ON products(categoryid);
+CREATE INDEX idx_menus_category ON menus(categoryid);
+CREATE INDEX idx_orders_user ON orders(userid);
+CREATE INDEX idx_orders_status ON orders(status);
+CREATE INDEX idx_order_items_order ON order_items(orderid);
+CREATE INDEX idx_product_allergens_product ON product_allergens(productid);
+CREATE INDEX idx_menu_products_menu ON menu_products(menuid);
+
+-- Insert sample data
+
+-- Insert Categories
+INSERT INTO categories (name, description) VALUES
+('Breakfast', 'Morning meals and breakfast options'),
+('Appetizers', 'Starters and appetizers'),
+('Soups', 'Soups and broths'),
+('Main Course', 'Main dish options'),
+('Desserts', 'Sweet treats and desserts'),
+('Beverages', 'Drinks and refreshments');
+
+-- Insert Allergens
+INSERT INTO allergens (name, description) VALUES
+('Gluten', 'Contains wheat gluten'),
+('Lactose', 'Contains dairy products'),
+('Nuts', 'Contains nuts or nut products'),
+('Eggs', 'Contains eggs or egg products'),
+('Seafood', 'Contains fish or shellfish'),
+('Soy', 'Contains soy or soy products'),
+('Celery', 'Contains celery or celery products');
+
+-- Insert Products
+INSERT INTO products (name, price, portionsize, totalquantity, categoryid, isavailable) VALUES
+-- Breakfast
+('English Breakfast', 14.99, 450, 4500, 1, TRUE),
+('Pancakes with Maple Syrup', 9.99, 300, 3000, 1, TRUE),
+('Avocado Toast', 11.99, 250, 2500, 1, TRUE),
+('Yogurt with Granola', 8.99, 200, 2000, 1, TRUE),
+
+-- Appetizers
+('Bruschetta', 7.99, 150, 1500, 2, TRUE),
+('Caprese Salad', 9.99, 200, 2000, 2, TRUE),
+('Mozzarella Sticks', 8.99, 180, 1800, 2, TRUE),
+('Garlic Bread', 6.99, 120, 1200, 2, TRUE),
+
+-- Soups
+('Mushroom Cream Soup', 8.99, 300, 3000, 3, TRUE),
+('Vegetable Soup', 7.99, 300, 3000, 3, TRUE),
+('Chicken Noodle Soup', 9.99, 350, 3500, 3, TRUE),
+('Tomato Soup', 7.99, 300, 3000, 3, TRUE),
+
+-- Main Course
+('Grilled Salmon', 18.99, 250, 2500, 4, TRUE),
+('Beef Steak', 22.99, 300, 3000, 4, TRUE),
+('Chicken Parmesan', 16.99, 350, 3500, 4, TRUE),
+('Vegetable Stir Fry', 14.99, 300, 3000, 4, TRUE),
+('Cheeseburger', 13.99, 350, 3500, 4, TRUE),
+('Fish & Chips', 15.99, 400, 4000, 4, TRUE),
+
+-- Desserts
+('Tiramisu', 7.99, 150, 1500, 5, TRUE),
+('Chocolate Cake', 6.99, 120, 1200, 5, TRUE),
+('Apple Pie', 6.99, 150, 1500, 5, TRUE),
+('Ice Cream Sundae', 5.99, 200, 2000, 5, TRUE),
+
+-- Beverages
+('Coca Cola', 2.99, 330, 9900, 6, TRUE),
+('Sprite', 2.99, 330, 9900, 6, TRUE),
+('Lemonade', 3.99, 300, 9000, 6, TRUE),
+('Coffee', 3.99, 250, 7500, 6, TRUE),
+('Tea', 2.99, 250, 7500, 6, TRUE);
+
+-- Insert Product_Allergens
+INSERT INTO product_allergens (productid, allergenid) VALUES
+(1, 1), (1, 2), (1, 4), -- English Breakfast: Gluten, Lactose, Eggs
+(2, 1), (2, 2), (2, 4), -- Pancakes: Gluten, Lactose, Eggs
+(3, 1), -- Avocado Toast: Gluten
+(4, 2), (4, 3), -- Yogurt with Granola: Lactose, Nuts
+(5, 1), -- Bruschetta: Gluten
+(6, 2), -- Caprese Salad: Lactose
+(7, 1), (7, 2), (7, 4), -- Mozzarella Sticks: Gluten, Lactose, Eggs
+(8, 1), (8, 2), -- Garlic Bread: Gluten, Lactose
+(9, 2), (9, 7), -- Mushroom Cream Soup: Lactose, Celery
+(10, 7), -- Vegetable Soup: Celery
+(11, 1), (11, 7), -- Chicken Noodle Soup: Gluten, Celery
+(12, 2), -- Tomato Soup: Lactose
+(13, 5), -- Grilled Salmon: Seafood
+(14, 2), -- Beef Steak: Lactose
+(15, 1), (15, 2), (15, 4), -- Chicken Parmesan: Gluten, Lactose, Eggs
+(16, 6), -- Vegetable Stir Fry: Soy
+(17, 1), (17, 2), (17, 4), -- Cheeseburger: Gluten, Lactose, Eggs
+(18, 1), (18, 5), -- Fish & Chips: Gluten, Seafood
+(19, 2), (19, 4), -- Tiramisu: Lactose, Eggs
+(20, 1), (20, 2), (20, 4), -- Chocolate Cake: Gluten, Lactose, Eggs
+(21, 1), -- Apple Pie: Gluten
+(22, 2), (22, 4); -- Ice Cream Sundae: Lactose, Eggs
+
+-- Insert Menus
+INSERT INTO menus (name, description, price, categoryid, isavailable) VALUES
+('Breakfast Special', 'English breakfast with coffee or tea', 16.99, 1, TRUE),
+('Soup & Bread Combo', 'Any soup with garlic bread', 12.99, 3, TRUE),
+('Burger Meal', 'Cheeseburger with fries and drink', 17.99, 4, TRUE),
+('Steak Dinner', 'Beef steak with side salad and dessert', 29.99, 4, TRUE),
+('Family Bundle', 'Selection of main courses, sides and drinks for 4', 59.99, 4, TRUE);
+
+-- Insert Menu_Products
+INSERT INTO menu_products (menuid, productid, portionsize) VALUES
+-- Breakfast Special
+(1, 1, 400), -- English Breakfast (smaller portion)
+(1, 24, 250), -- Coffee
+-- Soup & Bread Combo
+(2, 9, 300), -- Mushroom Cream Soup
+(2, 8, 120), -- Garlic Bread
+-- Burger Meal
+(3, 17, 350), -- Cheeseburger
+(3, 18, 200), -- Fish & Chips (just the chips portion as a side)
+(3, 23, 330), -- Cola
+-- Steak Dinner
+(4, 14, 250), -- Beef Steak (smaller portion)
+(4, 6, 150), -- Caprese Salad (smaller portion)
+(4, 20, 100), -- Chocolate Cake (smaller portion)
+-- Family Bundle
+(5, 14, 250), -- Beef Steak (4 smaller portions)
+(5, 15, 250), -- Chicken Parmesan (smaller portion)
+(5, 16, 250), -- Vegetable Stir Fry (smaller portion)
+(5, 6, 300), -- Caprese Salad (larger for sharing)
+(5, 23, 330), -- Cola (4 servings)
+(5, 20, 120); -- Chocolate Cake (4 servings)
+
+-- Insert Users
+INSERT INTO users (firstname, lastname, email, passwordhash, phonenumber, deliveryaddress, usertype) VALUES
+-- Employees (admin: password = "admin", john: password = "12345")
+('Admin', 'User', 'admin@restaurant.com', '8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918', '1234567890', 'Restaurant Address', 'Employee'),
+('John', 'Manager', 'john@restaurant.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '1234567891', 'Restaurant Address', 'Employee'),
+-- Customers (all passwords = "12345")
+('Alice', 'Smith', 'alice@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '9876543210', '123 Main St, Anytown', 'Customer'),
+('Bob', 'Johnson', 'bob@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '9876543211', '456 Oak Ave, Somewhere', 'Customer'),
+('Carol', 'Williams', 'carol@example.com', '5994471abb01112afcc18159f6cc74b4f511b99806da59b3caf5a9c173cacfc5', '9876543212', '789 Pine Rd, Nowhere', 'Customer');
+
+-- Insert Orders
+INSERT INTO orders (userid, orderdate, totalamount, deliveryfee, discount, status, estimateddeliverytime, deliveryaddress) VALUES
+(3, NOW() - INTERVAL '2 days', 25.98, 0, 0, 'Delivered', NOW() - INTERVAL '1 day 23 hours', '123 Main St, Anytown'),
+(3, NOW() - INTERVAL '1 day', 32.97, 5, 2.50, 'Delivered', NOW() - INTERVAL '22 hours', '123 Main St, Anytown'),
+(3, NOW() - INTERVAL '5 hours', 17.99, 0, 0, 'Dispatched', NOW() + INTERVAL '25 minutes', '123 Main St, Anytown'),
+(4, NOW() - INTERVAL '3 days', 54.97, 0, 5.00, 'Delivered', NOW() - INTERVAL '2 days 23 hours', '456 Oak Ave, Somewhere'),
+(4, NOW() - INTERVAL '2 hours', 29.99, 0, 0, 'Preparing', NOW() + INTERVAL '40 minutes', '456 Oak Ave, Somewhere'),
+(5, NOW() - INTERVAL '4 hours', 59.99, 0, 5.00, 'Registered', NOW() + INTERVAL '55 minutes', '789 Pine Rd, Nowhere');
+
+-- Insert Order_Items
+INSERT INTO order_items (orderid, productid, menuid, quantity, unitprice) VALUES
+-- Order 1: Two soups and garlic bread
+(1, 9, NULL, 1, 8.99),
+(1, 11, NULL, 1, 9.99),
+(1, 8, NULL, 1, 6.99),
+
+-- Order 2: Mix of products
+(2, 17, NULL, 1, 13.99),
+(2, 18, NULL, 1, 15.99),
+(2, 23, NULL, 1, 2.99),
+
+-- Order 3: Burger menu
+(3, NULL, 3, 1, 17.99),
+
+-- Order 4: Multiple burger meal and desserts
+(4, NULL, 3, 2, 17.99),
+(4, 19, NULL, 1, 7.99),
+(4, 20, NULL, 1, 6.99),
+(4, 23, NULL, 1, 2.99),
+
+-- Order 5: Steak dinner
+(5, NULL, 4, 1, 29.99),
+
+-- Order 6: Family bundle
+(6, NULL, 5, 1, 59.99);
+
+-- Create stored procedures
+
+-- 1. Procedure to get low stock products
+CREATE OR REPLACE FUNCTION get_low_stock_products(threshold_param INT)
+RETURNS TABLE (
+    productid INT,
+    name VARCHAR,
+    totalquantity INT,
+    portionsize INT,
+    portionsleft INT,
+    categoryname VARCHAR
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT p.productid, p.name, p.totalquantity, p.portionsize, 
+           p.totalquantity / p.portionsize AS portionsleft,
+           c.name AS categoryname
+    FROM products p
+    JOIN categories c ON p.categoryid = c.categoryid
+    WHERE p.totalquantity <= threshold_param
+    ORDER BY portionsleft ASC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 2. Procedure to update product quantities when order status changes
+CREATE OR REPLACE FUNCTION update_product_quantities_for_order(order_id_param INT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    item RECORD;
+    product_portion INT;
+    item_quantity INT;
+    quantity_to_deduct INT;
+BEGIN
+    -- Process regular products in the order
+    FOR item IN 
+        SELECT oi.productid, oi.quantity, p.portionsize
+        FROM order_items oi
+        JOIN products p ON oi.productid = p.productid
+        WHERE oi.orderid = order_id_param AND oi.productid IS NOT NULL
+    LOOP
+        quantity_to_deduct := item.quantity * item.portionsize;
+        
+        -- Check if enough quantity is available
+        IF (SELECT totalquantity FROM products WHERE productid = item.productid) < quantity_to_deduct THEN
+            RETURN FALSE;
+        END IF;
+        
+        -- Update product quantity
+        UPDATE products
+        SET totalquantity = totalquantity - quantity_to_deduct,
+            isavailable = CASE WHEN (totalquantity - quantity_to_deduct) <= 0 THEN FALSE ELSE isavailable END
+        WHERE productid = item.productid;
+    END LOOP;
+    
+    -- Process menu items in the order
+    FOR item IN 
+        SELECT mp.productid, oi.quantity, mp.portionsize
+        FROM order_items oi
+        JOIN menu_products mp ON oi.menuid = mp.menuid
+        WHERE oi.orderid = order_id_param AND oi.menuid IS NOT NULL
+    LOOP
+        quantity_to_deduct := item.quantity * item.portionsize;
+        
+        -- Check if enough quantity is available
+        IF (SELECT totalquantity FROM products WHERE productid = item.productid) < quantity_to_deduct THEN
+            RETURN FALSE;
+        END IF;
+        
+        -- Update product quantity
+        UPDATE products
+        SET totalquantity = totalquantity - quantity_to_deduct,
+            isavailable = CASE WHEN (totalquantity - quantity_to_deduct) <= 0 THEN FALSE ELSE isavailable END
+        WHERE productid = item.productid;
+    END LOOP;
+    
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 3. Procedure to check if a menu is available
+CREATE OR REPLACE FUNCTION is_menu_available(menu_id_param INT)
+RETURNS BOOLEAN AS $$
+DECLARE
+    unavailable_count INT;
+BEGIN
+    SELECT COUNT(*) INTO unavailable_count
+    FROM menu_products mp
+    JOIN products p ON mp.productid = p.productid
+    WHERE mp.menuid = menu_id_param
+    AND (p.isavailable = FALSE OR p.totalquantity < mp.portionsize);
+    
+    RETURN (unavailable_count = 0);
+END;
+$$ LANGUAGE plpgsql;
+
+-- 4. Procedure to get order history for a customer
+CREATE OR REPLACE FUNCTION get_customer_orders(customer_id_param INT)
+RETURNS TABLE (
+    orderid INT,
+    orderdate TIMESTAMP,
+    totalamount DECIMAL,
+    status VARCHAR,
+    itemcount BIGINT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT o.orderid, o.orderdate, o.totalamount, o.status, COUNT(oi.orderitemid) AS itemcount
+    FROM orders o
+    LEFT JOIN order_items oi ON o.orderid = oi.orderid
+    WHERE o.userid = customer_id_param
+    GROUP BY o.orderid, o.orderdate, o.totalamount, o.status
+    ORDER BY o.orderdate DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- 5. Procedure to search products by name or allergen
+CREATE OR REPLACE FUNCTION search_products(search_term VARCHAR, search_by_allergen BOOLEAN, invert_search BOOLEAN)
+RETURNS TABLE (
+    productid INT,
+    name VARCHAR,
+    price DECIMAL,
+    portionsize INT,
+    categoryname VARCHAR,
+    isavailable BOOLEAN,
+    allergens TEXT
+) AS $$
+BEGIN
+    IF search_by_allergen THEN
+        IF invert_search THEN
+            -- Products that DON'T contain the allergen
+            RETURN QUERY
+            SELECT p.productid, p.name, p.price, p.portionsize, c.name AS categoryname, p.isavailable,
+                   string_agg(a.name, ', ') AS allergens
+            FROM products p
+            LEFT JOIN categories c ON p.categoryid = c.categoryid
+            LEFT JOIN product_allergens pa ON p.productid = pa.productid
+            LEFT JOIN allergens a ON pa.allergenid = a.allergenid
+            GROUP BY p.productid, p.name, p.price, p.portionsize, c.name, p.isavailable
+            HAVING p.productid NOT IN (
+                SELECT p2.productid
+                FROM products p2
+                JOIN product_allergens pa2 ON p2.productid = pa2.productid
+                JOIN allergens a2 ON pa2.allergenid = a2.allergenid
+                WHERE LOWER(a2.name) LIKE LOWER('%' || search_term || '%')
+            );
+        ELSE
+            -- Products that DO contain the allergen
+            RETURN QUERY
+            SELECT p.productid, p.name, p.price, p.portionsize, c.name AS categoryname, p.isavailable,
+                   string_agg(a.name, ', ') AS allergens
+            FROM products p
+            LEFT JOIN categories c ON p.categoryid = c.categoryid
+            LEFT JOIN product_allergens pa ON p.productid = pa.productid
+            LEFT JOIN allergens a ON pa.allergenid = a.allergenid
+            WHERE p.productid IN (
+                SELECT p2.productid
+                FROM products p2
+                JOIN product_allergens pa2 ON p2.productid = pa2.productid
+                JOIN allergens a2 ON pa2.allergenid = a2.allergenid
+                WHERE LOWER(a2.name) LIKE LOWER('%' || search_term || '%')
+            )
+            GROUP BY p.productid, p.name, p.price, p.portionsize, c.name, p.isavailable;
+        END IF;
+    ELSE
+        IF invert_search THEN
+            -- Products that DON'T contain the search term in name
+            RETURN QUERY
+            SELECT p.productid, p.name, p.price, p.portionsize, c.name AS categoryname, p.isavailable,
+                   string_agg(a.name, ', ') AS allergens
+            FROM products p
+            LEFT JOIN categories c ON p.categoryid = c.categoryid
+            LEFT JOIN product_allergens pa ON p.productid = pa.productid
+            LEFT JOIN allergens a ON pa.allergenid = a.allergenid
+            WHERE LOWER(p.name) NOT LIKE LOWER('%' || search_term || '%')
+            GROUP BY p.productid, p.name, p.price, p.portionsize, c.name, p.isavailable;
+        ELSE
+            -- Products that DO contain the search term in name
+            RETURN QUERY
+            SELECT p.productid, p.name, p.price, p.portionsize, c.name AS categoryname, p.isavailable,
+                   string_agg(a.name, ', ') AS allergens
+            FROM products p
+            LEFT JOIN categories c ON p.categoryid = c.categoryid
+            LEFT JOIN product_allergens pa ON p.productid = pa.productid
+            LEFT JOIN allergens a ON pa.allergenid = a.allergenid
+            WHERE LOWER(p.name) LIKE LOWER('%' || search_term || '%')
+            GROUP BY p.productid, p.name, p.price, p.portionsize, c.name, p.isavailable;
+        END IF;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
