@@ -101,7 +101,13 @@
                             <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
                             <GridViewColumn Header="Unit Price" DisplayMemberBinding="{Binding UnitPrice, StringFormat='{}{0:C}'}" Width="100"/>
                             <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}" Width="70"/>
-                            <GridViewColumn Header="Total" DisplayMemberBinding="{Binding Quantity, Converter={StaticResource OrderItemTotalConverter}, ConverterParameter={Binding UnitPrice}}" Width="100"/>
+                            <GridViewColumn Header="Total" Width="100">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:C}'}" />
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                            </GridViewColumn>
                         </GridView>
                     </ListView.View>
                 </ListView>
