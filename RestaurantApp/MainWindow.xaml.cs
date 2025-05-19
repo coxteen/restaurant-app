@@ -59,7 +59,7 @@ namespace RestaurantApp
 
         private void ProductsButton_Click(object sender, RoutedEventArgs e)
         {
-            var productViewModel = new ProductViewModel(_productService);
+            var productViewModel = new ProductViewModel(_productService, _shoppingCart);
             var productView = new ProductView();
             productView.DataContext = productViewModel;
             MainContent.Content = productView;
@@ -67,7 +67,7 @@ namespace RestaurantApp
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
         {
-            var searchViewModel = new SearchViewModel(_productService);
+            var searchViewModel = new SearchViewModel(_productService, _shoppingCart);
             var searchView = new SearchView();
             searchView.DataContext = searchViewModel;
             MainContent.Content = searchView;

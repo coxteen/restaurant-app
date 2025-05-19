@@ -13,11 +13,18 @@ namespace RestaurantApp.ViewModels
         private readonly ProductService _productService;
         private readonly ShoppingCart _cart;
         private ObservableCollection<CategoryWithProducts> _categories;
+        private string _message;
 
         public ObservableCollection<CategoryWithProducts> Categories
         {
             get { return _categories; }
             set { SetProperty(ref _categories, value); }
+        }
+
+        public string Message
+        {
+            get { return _message; }
+            set { SetProperty(ref _message, value); }
         }
 
         public ICommand AddToCartCommand { get; }
@@ -54,7 +61,7 @@ namespace RestaurantApp.ViewModels
         {
             if (parameter is Product product)
             {
-                return product.IsAvailable;
+                return product.IsAvailable && product.TotalQuantity > 0;
             }
             return false;
         }
@@ -64,6 +71,17 @@ namespace RestaurantApp.ViewModels
             if (parameter is Product product)
             {
                 _cart.AddItem(product);
+                Message = $"Added {product.Name} to cart";
+
+                // Clear the message after 3 seconds
+                System.Threading.Tasks.Task.Delay(3000).ContinueWith(_ =>
+                {
+                    if (Message == $"Added {product.Name} to cart")
+                    {
+                        Message = string.Empty;
+                        OnPropertyChanged(nameof(Message));
+                    }
+                }, System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext());
             }
         }
     }

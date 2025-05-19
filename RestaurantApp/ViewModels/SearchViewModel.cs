@@ -11,10 +11,12 @@ namespace RestaurantApp.ViewModels
     public class SearchViewModel : BaseViewModel
     {
         private readonly ProductService _productService;
+        private readonly ShoppingCart _cart;
         private string _searchTerm;
         private bool _searchForAllergen;
         private bool _invertSearch;
         private ObservableCollection<Product> _searchResults;
+        private string _message;
 
         public string SearchTerm
         {
@@ -40,13 +42,23 @@ namespace RestaurantApp.ViewModels
             set { SetProperty(ref _searchResults, value); }
         }
 
-        public ICommand SearchCommand { get; }
+        public string Message
+        {
+            get { return _message; }
+            set { SetProperty(ref _message, value); }
+        }
 
-        public SearchViewModel(ProductService productService)
+        public ICommand SearchCommand { get; }
+        public ICommand AddToCartCommand { get; }
+
+        public SearchViewModel(ProductService productService, ShoppingCart cart = null)
         {
             _productService = productService;
+            _cart = cart ?? new ShoppingCart(); // Use provided cart or create a dummy one
+
             SearchResults = new ObservableCollection<Product>();
             SearchCommand = new RelayCommand(ExecuteSearch, CanExecuteSearch);
+            AddToCartCommand = new RelayCommand(ExecuteAddToCart, CanAddToCart);
         }
 
         private bool CanExecuteSearch(object parameter)
@@ -96,6 +108,24 @@ namespace RestaurantApp.ViewModels
             foreach (var product in results)
             {
                 SearchResults.Add(product);
+            }
+        }
+
+        private bool CanAddToCart(object parameter)
+        {
+            if (parameter is Product product)
+            {
+                return product.IsAvailable && product.TotalQuantity > 0;
+            }
+            return false;
+        }
+
+        private void ExecuteAddToCart(object parameter)
+        {
+            if (_cart != null && parameter is Product product)
+            {
+                _cart.AddItem(product);
+                Message = $"Added {product.Name} to cart";
             }
         }
     }

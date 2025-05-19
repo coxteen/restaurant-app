@@ -2,6 +2,7 @@
 using RestaurantApp.Models;
 using RestaurantApp.Services;
 using System;
+using System.Linq;
 using System.Windows.Input;
 
 namespace RestaurantApp.ViewModels
@@ -38,7 +39,7 @@ namespace RestaurantApp.ViewModels
             _orderService = orderService;
             Cart = cart;
 
-            if (_userService.IsAuthenticated)
+            if (_userService.IsAuthenticated && Cart.Items.Count > 0)
             {
                 // Calculate costs based on user's order history
                 _orderService.CalculateOrderCosts(Cart, _userService.CurrentUser);
@@ -47,7 +48,11 @@ namespace RestaurantApp.ViewModels
             CheckoutCommand = new RelayCommand(ExecuteCheckout, CanExecuteCheckout);
             UpdateQuantityCommand = new RelayCommand(ExecuteUpdateQuantity);
             RemoveItemCommand = new RelayCommand(ExecuteRemoveItem);
-            ClearCartCommand = new RelayCommand(_ => Cart.Clear());
+            ClearCartCommand = new RelayCommand(_ =>
+            {
+                Cart.Clear();
+                OnPropertyChanged(nameof(CanCheckout));
+            });
         }
 
         private bool CanExecuteCheckout(object parameter)
@@ -59,12 +64,25 @@ namespace RestaurantApp.ViewModels
         {
             try
             {
+                if (!_userService.IsAuthenticated)
+                {
+                    Message = "Please log in to place an order.";
+                    return;
+                }
+
+                if (string.IsNullOrEmpty(_userService.CurrentUser.DeliveryAddress))
+                {
+                    Message = "Please update your profile with a delivery address before checking out.";
+                    return;
+                }
+
                 int orderId = _orderService.PlaceOrder(Cart, _userService.CurrentUser);
 
                 if (orderId > 0)
                 {
                     Message = $"Order placed successfully! Your order ID is: {orderId}";
                     Cart.Clear();
+                    OnPropertyChanged(nameof(CanCheckout));
                 }
             }
             catch (Exception ex)
@@ -84,9 +102,16 @@ namespace RestaurantApp.ViewModels
                 if (item != null)
                 {
                     int newQuantity = item.Quantity + change;
-                    Cart.UpdateItemQuantity(productId, newQuantity);
+                    if (newQuantity <= 0)
+                    {
+                        Cart.RemoveItem(productId);
+                    }
+                    else
+                    {
+                        Cart.UpdateItemQuantity(productId, newQuantity);
+                    }
 
-                    if (_userService.IsAuthenticated)
+                    if (_userService.IsAuthenticated && Cart.Items.Count > 0)
                     {
                         // Recalculate costs
                         _orderService.CalculateOrderCosts(Cart, _userService.CurrentUser);
@@ -103,7 +128,7 @@ namespace RestaurantApp.ViewModels
             {
                 Cart.RemoveItem(productId);
 
-                if (_userService.IsAuthenticated)
+                if (_userService.IsAuthenticated && Cart.Items.Count > 0)
                 {
                     // Recalculate costs
                     _orderService.CalculateOrderCosts(Cart, _userService.CurrentUser);

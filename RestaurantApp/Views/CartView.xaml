@@ -25,11 +25,11 @@
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="-" Width="30" 
+                                    <Button Content="-" Width="30" Height="24"
                                             Command="{Binding DataContext.UpdateQuantityCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="{Binding ProductId, Converter={StaticResource ProductQuantityConverter}, ConverterParameter=-1}"/>
                                     <TextBlock Text="{Binding Quantity}" Width="30" TextAlignment="Center" VerticalAlignment="Center"/>
-                                    <Button Content="+" Width="30" 
+                                    <Button Content="+" Width="30" Height="24"
                                             Command="{Binding DataContext.UpdateQuantityCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="{Binding ProductId, Converter={StaticResource ProductQuantityConverter}, ConverterParameter=1}"/>
                                 </StackPanel>
@@ -48,6 +48,11 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <!-- Summary and Checkout -->
@@ -71,23 +76,35 @@
                            Foreground="Green" Margin="0,0,0,10"
                            Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
 
+                <!-- Cart Empty Message -->
+                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Your cart is empty" 
+                           FontSize="16" HorizontalAlignment="Center" Margin="0,20"
+                           Visibility="{Binding Cart.Items.Count, Converter={StaticResource ZeroToVisibilityConverter}}"/>
+
                 <!-- Subtotal -->
-                <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal:" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Subtotal:" HorizontalAlignment="Right"
+                           Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
                 <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding Cart.Subtotal, StringFormat='{}{0:C}'}" 
-                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right"/>
+                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right"
+                           Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
 
                 <!-- Delivery Fee -->
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Delivery Fee:" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Delivery Fee:" HorizontalAlignment="Right"
+                           Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
                 <TextBlock Grid.Row="2" Grid.Column="1" Text="{Binding Cart.DeliveryFee, StringFormat='{}{0:C}'}" 
-                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right"/>
+                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right"
+                           Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
 
                 <!-- Discount -->
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Discount:" HorizontalAlignment="Right"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Discount:" HorizontalAlignment="Right"
+                           Visibility="{Binding Cart.Discount, Converter={StaticResource NonZeroDecimalToVisibilityConverter}}"/>
                 <TextBlock Grid.Row="3" Grid.Column="1" Text="{Binding Cart.Discount, StringFormat='-{0:C}'}" 
-                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right" Foreground="Green"/>
+                           HorizontalAlignment="Right" MinWidth="80" TextAlignment="Right" Foreground="Green"
+                           Visibility="{Binding Cart.Discount, Converter={StaticResource NonZeroDecimalToVisibilityConverter}}"/>
 
                 <!-- Total -->
-                <Border Grid.Row="4" Grid.ColumnSpan="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Margin="0,10">
+                <Border Grid.Row="4" Grid.ColumnSpan="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Margin="0,10"
+                        Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}">
                     <Grid Margin="0,10,0,0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
@@ -101,9 +118,11 @@
 
                 <!-- Action Buttons -->
                 <StackPanel Grid.Row="5" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button Content="Clear Cart" Command="{Binding ClearCartCommand}" Padding="10,5" Margin="0,0,10,0"/>
+                    <Button Content="Clear Cart" Command="{Binding ClearCartCommand}" Padding="10,5" Margin="0,0,10,0"
+                            Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
                     <Button Content="Checkout" Command="{Binding CheckoutCommand}" Padding="20,5" 
-                            Background="#4CAF50" Foreground="White"/>
+                            Background="#4CAF50" Foreground="White"
+                            Visibility="{Binding Cart.Items.Count, Converter={StaticResource NonZeroToVisibilityConverter}}"/>
                 </StackPanel>
             </Grid>
         </Border>

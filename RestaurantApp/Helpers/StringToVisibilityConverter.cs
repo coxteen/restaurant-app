@@ -17,4 +17,4 @@ namespace RestaurantApp.Helpers
             return ((Visibility)value == Visibility.Visible) ? string.Empty : null;
         }
     }
-}
+}   

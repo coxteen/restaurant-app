@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -73,7 +72,7 @@ namespace RestaurantApp.Models
         }
     }
 
-    public class CartItem : BaseNotifyPropertyChanged
+    public class CartItem : INotifyPropertyChanged
     {
         private int _quantity;
 
@@ -93,11 +92,7 @@ namespace RestaurantApp.Models
         }
 
         public decimal TotalPrice => UnitPrice * Quantity;
-    }
 
-    // Helper base class for property change notifications in models
-    public class BaseNotifyPropertyChanged : INotifyPropertyChanged
-    {
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

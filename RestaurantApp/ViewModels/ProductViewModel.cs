@@ -9,8 +9,10 @@ namespace RestaurantApp.ViewModels
     public class ProductViewModel : BaseViewModel
     {
         private readonly ProductService _productService;
+        private readonly ShoppingCart _cart;
         private ObservableCollection<Product> _products;
         private Product _selectedProduct;
+        private string _message;
 
         public ObservableCollection<Product> Products
         {
@@ -24,13 +26,22 @@ namespace RestaurantApp.ViewModels
             set { SetProperty(ref _selectedProduct, value); }
         }
 
-        public ICommand RefreshCommand { get; }
+        public string Message
+        {
+            get { return _message; }
+            set { SetProperty(ref _message, value); }
+        }
 
-        public ProductViewModel(ProductService productService)
+        public ICommand RefreshCommand { get; }
+        public ICommand AddToCartCommand { get; }
+
+        public ProductViewModel(ProductService productService, ShoppingCart cart = null)
         {
             _productService = productService;
+            _cart = cart ?? new ShoppingCart(); // Use provided cart or create a dummy one
 
             RefreshCommand = new RelayCommand(_ => LoadProducts());
+            AddToCartCommand = new RelayCommand(ExecuteAddToCart, CanAddToCart);
 
             LoadProducts();
         }
@@ -39,6 +50,24 @@ namespace RestaurantApp.ViewModels
         {
             var productList = _productService.GetAllProducts();
             Products = new ObservableCollection<Product>(productList);
+        }
+
+        private bool CanAddToCart(object parameter)
+        {
+            if (parameter is Product product)
+            {
+                return product.IsAvailable && product.TotalQuantity > 0;
+            }
+            return false;
+        }
+
+        private void ExecuteAddToCart(object parameter)
+        {
+            if (_cart != null && parameter is Product product)
+            {
+                _cart.AddItem(product);
+                Message = $"Added {product.Name} to cart";
+            }
         }
     }
 }

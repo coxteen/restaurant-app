@@ -16,5 +16,8 @@
         <helpers:PortionsLeftConverter x:Key="PortionsLeftConverter"/>
         <helpers:BoolToStringConverter x:Key="BoolToStringConverter"/>
         <helpers:OrderItemTotalMultiConverter x:Key="OrderItemTotalMultiConverter"/>
+        <helpers:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
+        <helpers:NonZeroToVisibilityConverter x:Key="NonZeroToVisibilityConverter"/>
+        <helpers:NonZeroDecimalToVisibilityConverter x:Key="NonZeroDecimalToVisibilityConverter"/>
     </Application.Resources>
 </Application>

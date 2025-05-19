@@ -1,20 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Data;
+using System.Windows;
 
 namespace RestaurantApp.Helpers
 {
-    public class ProductQuantityConverter : IValueConverter
+    public class NonZeroToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value is int productId && parameter is string paramStr)
+            if (value is int intValue)
             {
-                int change = int.Parse(paramStr);
-                // Return a tuple containing the product ID and the change value
-                return new Tuple<int, int>(productId, change);
+                return intValue > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
-            return null;
+            return Visibility.Collapsed;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
