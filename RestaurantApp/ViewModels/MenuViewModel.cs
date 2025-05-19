@@ -1,7 +1,6 @@
 ﻿using RestaurantApp.Helpers;
 using RestaurantApp.Models;
 using RestaurantApp.Services;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -14,8 +13,6 @@ namespace RestaurantApp.ViewModels
         private readonly ProductService _productService;
         private readonly ShoppingCart _cart;
         private ObservableCollection<CategoryWithProducts> _categories;
-
-        public event EventHandler ProductAddedToCart;
 
         public ObservableCollection<CategoryWithProducts> Categories
         {
@@ -31,7 +28,7 @@ namespace RestaurantApp.ViewModels
             _productService = productService;
             _cart = cart;
 
-            AddToCartCommand = new RelayCommand<Product>(ExecuteAddToCart);
+            AddToCartCommand = new RelayCommand(ExecuteAddToCart, CanExecuteAddToCart);
 
             LoadMenu();
         }
@@ -53,18 +50,21 @@ namespace RestaurantApp.ViewModels
             Categories = new ObservableCollection<CategoryWithProducts>(categoriesWithProducts);
         }
 
-        private void ExecuteAddToCart(Product product)
+        private bool CanExecuteAddToCart(object parameter)
         {
-            if (product != null && product.IsAvailable)
+            if (parameter is Product product)
             {
-                _cart.AddItem(product, 1);
-                OnProductAddedToCart();
+                return product.IsAvailable;
             }
+            return false;
         }
 
-        protected virtual void OnProductAddedToCart()
+        private void ExecuteAddToCart(object parameter)
         {
-            ProductAddedToCart?.Invoke(this, EventArgs.Empty);
+            if (parameter is Product product)
+            {
+                _cart.AddItem(product);
+            }
         }
     }
 

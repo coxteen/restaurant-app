@@ -1,10 +1,10 @@
-﻿using RestaurantApp.Models;
-using RestaurantApp.Helpers;
+﻿using RestaurantApp.Helpers;
+using RestaurantApp.Models;
 using RestaurantApp.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
-using System;
 
 namespace RestaurantApp.ViewModels
 {

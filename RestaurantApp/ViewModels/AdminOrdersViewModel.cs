@@ -1,6 +1,7 @@
 ﻿using RestaurantApp.Helpers;
 using RestaurantApp.Models;
 using RestaurantApp.Services;
+using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -49,7 +50,6 @@ namespace RestaurantApp.ViewModels
         {
             _orderService = orderService;
             _activeOrdersOnly = true; // Default to active orders only
-
             ChangeStatusCommand = new RelayCommand<string>(ExecuteChangeStatus);
             RefreshCommand = new RelayCommand(_ => LoadOrders());
 

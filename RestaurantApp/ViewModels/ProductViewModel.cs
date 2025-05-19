@@ -1,6 +1,8 @@
-﻿using RestaurantApp.Models;
+﻿using RestaurantApp.Helpers;
+using RestaurantApp.Models;
 using RestaurantApp.Services;
 using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace RestaurantApp.ViewModels
 {
@@ -8,6 +10,7 @@ namespace RestaurantApp.ViewModels
     {
         private readonly ProductService _productService;
         private ObservableCollection<Product> _products;
+        private Product _selectedProduct;
 
         public ObservableCollection<Product> Products
         {
@@ -15,9 +18,20 @@ namespace RestaurantApp.ViewModels
             set { SetProperty(ref _products, value); }
         }
 
+        public Product SelectedProduct
+        {
+            get { return _selectedProduct; }
+            set { SetProperty(ref _selectedProduct, value); }
+        }
+
+        public ICommand RefreshCommand { get; }
+
         public ProductViewModel(ProductService productService)
         {
             _productService = productService;
+
+            RefreshCommand = new RelayCommand(_ => LoadProducts());
+
             LoadProducts();
         }
 

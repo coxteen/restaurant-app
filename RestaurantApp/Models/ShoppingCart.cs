@@ -1,61 +1,25 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace RestaurantApp.Models
 {
-    public class ShoppingCart : INotifyPropertyChanged
+    public class ShoppingCart
     {
-        private ObservableCollection<CartItem> _items = new ObservableCollection<CartItem>();
-        private decimal _deliveryFee;
-        private decimal _discount;
-
-        public ObservableCollection<CartItem> Items
-        {
-            get { return _items; }
-            set
-            {
-                _items = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Subtotal));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(ItemCount));
-            }
-        }
-
-        public decimal DeliveryFee
-        {
-            get { return _deliveryFee; }
-            set
-            {
-                _deliveryFee = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
-            }
-        }
-
-        public decimal Discount
-        {
-            get { return _discount; }
-            set
-            {
-                _discount = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(Total));
-            }
-        }
+        public ObservableCollection<CartItem> Items { get; set; } = new ObservableCollection<CartItem>();
 
         public decimal Subtotal => Items.Sum(item => item.TotalPrice);
+
+        // These will be calculated based on order settings
+        public decimal DeliveryFee { get; set; }
+        public decimal Discount { get; set; }
+
         public decimal Total => Subtotal + DeliveryFee - Discount;
-        public int ItemCount => Items.Sum(item => item.Quantity);
 
         public void AddItem(Product product, int quantity = 1)
         {
-            if (product == null || quantity <= 0 || !product.IsAvailable)
-                return;
-
             var existingItem = Items.FirstOrDefault(i => i.ProductId == product.ProductId);
 
             if (existingItem != null)
@@ -72,10 +36,6 @@ namespace RestaurantApp.Models
                     Quantity = quantity
                 });
             }
-
-            OnPropertyChanged(nameof(Subtotal));
-            OnPropertyChanged(nameof(Total));
-            OnPropertyChanged(nameof(ItemCount));
         }
 
         public void UpdateItemQuantity(int productId, int quantity)
@@ -92,10 +52,6 @@ namespace RestaurantApp.Models
                 {
                     item.Quantity = quantity;
                 }
-
-                OnPropertyChanged(nameof(Subtotal));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(ItemCount));
             }
         }
 
@@ -106,10 +62,6 @@ namespace RestaurantApp.Models
             if (item != null)
             {
                 Items.Remove(item);
-
-                OnPropertyChanged(nameof(Subtotal));
-                OnPropertyChanged(nameof(Total));
-                OnPropertyChanged(nameof(ItemCount));
             }
         }
 
@@ -118,12 +70,34 @@ namespace RestaurantApp.Models
             Items.Clear();
             DeliveryFee = 0;
             Discount = 0;
+        }
+    }
 
-            OnPropertyChanged(nameof(Subtotal));
-            OnPropertyChanged(nameof(Total));
-            OnPropertyChanged(nameof(ItemCount));
+    public class CartItem : BaseNotifyPropertyChanged
+    {
+        private int _quantity;
+
+        public int ProductId { get; set; }
+        public string ProductName { get; set; }
+        public decimal UnitPrice { get; set; }
+
+        public int Quantity
+        {
+            get { return _quantity; }
+            set
+            {
+                _quantity = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(TotalPrice));
+            }
         }
 
+        public decimal TotalPrice => UnitPrice * Quantity;
+    }
+
+    // Helper base class for property change notifications in models
+    public class BaseNotifyPropertyChanged : INotifyPropertyChanged
+    {
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

@@ -7,6 +7,8 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using System;
+using System.Collections.Specialized;
 
 namespace RestaurantApp
 {
@@ -17,7 +19,6 @@ namespace RestaurantApp
         private readonly ProductService _productService;
         private readonly UserService _userService;
         private readonly OrderService _orderService;
-        private readonly CartPersistenceService _cartPersistenceService;
 
         private ShoppingCart _shoppingCart = new ShoppingCart();
 
@@ -27,21 +28,23 @@ namespace RestaurantApp
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = this;
 
             _databaseService = new DatabaseService();
             _categoryService = new CategoryService(_databaseService);
             _productService = new ProductService(_databaseService);
             _userService = new UserService(_databaseService);
             _orderService = new OrderService(_databaseService, _productService);
-            _cartPersistenceService = new CartPersistenceService(_databaseService, _productService);
 
             CartClickCommand = new RelayCommand(_ => CartButton_Click(null, null));
             _shoppingCart.Items.CollectionChanged += ShoppingCart_CollectionChanged;
 
-            _cartPersistenceService.EnsureCartTableExists();
+            // Navigate to menu by default
+            MenuButton_Click(null, null);
+            UpdateNavigationBar();
         }
 
-        private void ShoppingCart_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+        private void ShoppingCart_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             OnPropertyChanged(nameof(ShoppingCartItemCount));
         }
@@ -88,6 +91,13 @@ namespace RestaurantApp
             UpdateNavigationBar();
         }
 
+        private void RefreshMainWindow()
+        {
+            // Navigate to the menu view by default
+            MenuButton_Click(null, null);
+            UpdateNavigationBar();
+        }
+
         private void UpdateNavigationBar()
         {
             // Show/hide buttons based on authentication status
@@ -113,12 +123,28 @@ namespace RestaurantApp
             RefreshMainWindow();
         }
 
+        private void CartButton_Click(object sender, RoutedEventArgs e)
+        {
+            var cartViewModel = new CartViewModel(_userService, _orderService, _shoppingCart);
+            var cartView = new CartView();
+            cartView.DataContext = cartViewModel;
+            MainContent.Content = cartView;
+        }
+
         private void OrdersButton_Click(object sender, RoutedEventArgs e)
         {
             var ordersViewModel = new UserOrdersViewModel(_userService, _orderService);
             var ordersView = new UserOrdersView();
             ordersView.DataContext = ordersViewModel;
             MainContent.Content = ordersView;
+        }
+
+        private void MenuButton_Click(object sender, RoutedEventArgs e)
+        {
+            var menuViewModel = new MenuViewModel(_categoryService, _productService, _shoppingCart);
+            var menuView = new MenuView();
+            menuView.DataContext = menuViewModel;
+            MainContent.Content = menuView;
         }
 
         private void AllOrdersButton_Click(object sender, RoutedEventArgs e)
@@ -137,81 +163,47 @@ namespace RestaurantApp
             MainContent.Content = stockAlertView;
         }
 
-        private void HandleUserSessionChange()
+        private void AddCheeseburger_Click(object sender, RoutedEventArgs e)
         {
-            if (_userService.IsAuthenticated)
+            // Get the category ID for Main Course
+            int categoryId = _categoryService.GetCategoryByName("Main Course")?.CategoryId ?? 0;
+
+            // If the category doesn't exist, create it
+            if (categoryId == 0)
             {
-                // Save current anonymous cart items if any
-                var anonymousCartItems = new List<CartItem>(_shoppingCart.Items);
+                var category = new Category { Name = "Main Course", Description = "Main dish options" };
+                _categoryService.AddCategory(category);
+                categoryId = _categoryService.GetCategoryByName("Main Course").CategoryId;
+            }
 
-                // Load user's saved cart
-                _shoppingCart = _cartPersistenceService.LoadCart(_userService.CurrentUser.UserId);
+            // Create a cheeseburger product
+            var cheeseburger = new Product
+            {
+                Name = "Cheeseburger",
+                Price = 12.99m,
+                PortionSize = 350,
+                TotalQuantity = 10000,
+                CategoryId = categoryId,
+                IsAvailable = true
+            };
 
-                // Merge anonymous cart items into user's cart if there were any
-                if (anonymousCartItems.Count > 0)
+            // Add the cheeseburger to the database
+            bool success = _productService.AddProduct(cheeseburger);
+
+            if (success)
+            {
+                MessageBox.Show("Cheeseburger added successfully!");
+
+                // If you have a product view open, refresh it
+                if (MainContent.Content is ProductView)
                 {
-                    foreach (var item in anonymousCartItems)
-                    {
-                        var existingItem = _shoppingCart.Items.FirstOrDefault(i => i.ProductId == item.ProductId);
-                        if (existingItem != null)
-                        {
-                            existingItem.Quantity += item.Quantity;
-                        }
-                        else
-                        {
-                            _shoppingCart.Items.Add(item);
-                        }
-                    }
-
-                    // Save the merged cart
-                    _cartPersistenceService.SaveCart(_userService.CurrentUser.UserId, _shoppingCart);
+                    ProductsButton_Click(null, null);
                 }
             }
-
-            // Note: When logging out, we keep the cart items in memory but don't clear them
-
-            // Update cart button display
-            OnPropertyChanged(nameof(ShoppingCartItemCount));
-        }
-
-        // Update the RefreshMainWindow method to handle session changes
-        private void RefreshMainWindow()
-        {
-            // Handle cart persistence
-            HandleUserSessionChange();
-
-            // Navigate to the menu view by default
-            MenuButton_Click(null, null);
-            UpdateNavigationBar();
-        }
-
-        // Add save cart method
-        private void SaveCurrentCart()
-        {
-            if (_userService.IsAuthenticated && _shoppingCart.Items.Count > 0)
+            else
             {
-                _cartPersistenceService.SaveCart(_userService.CurrentUser.UserId, _shoppingCart);
+                MessageBox.Show("Failed to add cheeseburger.");
             }
-        }
-
-        // Update MenuViewModel creation to handle adding products to cart
-        private void MenuButton_Click(object sender, RoutedEventArgs e)
-        {
-            var menuViewModel = new MenuViewModel(_categoryService, _productService, _shoppingCart);
-            menuViewModel.ProductAddedToCart += (s, args) => SaveCurrentCart(); // Save cart when product added
-            var menuView = new MenuView();
-            menuView.DataContext = menuViewModel;
-            MainContent.Content = menuView;
-        }
-
-        // Update CartButton_Click to save cart on changes
-        private void CartButton_Click(object sender, RoutedEventArgs e)
-        {
-            var cartViewModel = new CartViewModel(_userService, _orderService, _shoppingCart);
-            cartViewModel.CartChanged += (s, args) => SaveCurrentCart(); // Save when cart changed
-            var cartView = new CartView();
-            cartView.DataContext = cartViewModel;
-            MainContent.Content = cartView;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
