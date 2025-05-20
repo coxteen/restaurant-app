@@ -4,7 +4,85 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#2A2A2A">
+
+    <UserControl.Resources>
+        <!-- Modern Button Style (copied from MainWindow) -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Add to Cart Button Style (similar to Cart style from MainWindow) -->
+        <Style x:Key="AddToCartButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#C84B31"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D85B41"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#B83B21"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern Expander Style -->
+        <Style x:Key="ModernExpanderStyle" TargetType="Expander">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0,5,0,5"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="HeaderTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <Border Background="#191919" Padding="10,8" CornerRadius="5">
+                            <TextBlock Text="{Binding}" FontWeight="SemiBold" FontSize="16" Foreground="White"/>
+                        </Border>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,76 +90,133 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Header -->
-        <TextBlock Grid.Row="0" Text="Restaurant Menu" FontSize="24" FontWeight="SemiBold" Margin="10"/>
+        <!-- Header with shadow effect -->
+        <Border Grid.Row="0" Background="#191919" Padding="15,12" CornerRadius="5" Margin="0,0,0,10">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Opacity="0.3" BlurRadius="5"/>
+            </Border.Effect>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="🍽️" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
+                <TextBlock Text="Restaurant Menu" FontSize="24" FontWeight="SemiBold" Foreground="White"/>
+            </StackPanel>
+        </Border>
 
-        <!-- Message display -->
-        <TextBlock Grid.Row="2" Text="{Binding Message}" 
-                   Foreground="Green" Margin="10"
-                   Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+        <!-- Menu categories and products with shadow effect -->
+        <Border Grid.Row="1" Background="#2A2A2A" CornerRadius="5" Margin="0,5">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Opacity="0.3" BlurRadius="5"/>
+            </Border.Effect>
+            <ScrollViewer Margin="5">
+                <ItemsControl ItemsSource="{Binding Categories}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Expander Header="{Binding Name}" 
+                                      Style="{StaticResource ModernExpanderStyle}" 
+                                      IsExpanded="True">
+                                <ItemsControl ItemsSource="{Binding Products}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Background="#3A3A3A" 
+                                                    BorderThickness="0" 
+                                                    Margin="5" 
+                                                    Padding="15" 
+                                                    CornerRadius="8">
+                                                <Border.Effect>
+                                                    <DropShadowEffect ShadowDepth="1" Opacity="0.2" BlurRadius="4"/>
+                                                </Border.Effect>
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
 
-        <!-- Menu categories and products -->
-        <ScrollViewer Grid.Row="1">
-            <ItemsControl ItemsSource="{Binding Categories}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Expander Header="{Binding Name}" Margin="5" IsExpanded="True">
-                            <ItemsControl ItemsSource="{Binding Products}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border BorderBrush="#E0E0E0" BorderThickness="1" Margin="5" Padding="10" CornerRadius="5">
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                    <ColumnDefinition Width="Auto"/>
-                                                </Grid.ColumnDefinitions>
+                                                    <!-- Food image placeholder with updated styling -->
+                                                    <Border Grid.Column="0" 
+                                                            Width="80" 
+                                                            Height="80" 
+                                                            Background="#4A4A4A" 
+                                                            CornerRadius="5"
+                                                            Margin="0,0,15,0">
+                                                        <TextBlock Text="🍲" 
+                                                                   FontSize="32" 
+                                                                   VerticalAlignment="Center" 
+                                                                   HorizontalAlignment="Center"/>
+                                                    </Border>
 
-                                                <!-- This would be replaced with an actual image in a real app -->
-                                                <Border Grid.Column="0" Width="80" Height="80" Background="#F0F0F0" Margin="0,0,10,0">
-                                                    <TextBlock Text="Food" VerticalAlignment="Center" HorizontalAlignment="Center"/>
-                                                </Border>
+                                                    <!-- Product details with updated styling -->
+                                                    <StackPanel Grid.Column="1" Margin="0,0,15,0">
+                                                        <TextBlock Text="{Binding Name}" 
+                                                                   FontWeight="Bold" 
+                                                                   FontSize="16" 
+                                                                   Foreground="White"/>
+                                                        <TextBlock Text="{Binding PortionSize, StringFormat='Portion: {0}g'}" 
+                                                                   Margin="0,5,0,0" 
+                                                                   Foreground="#CCCCCC"/>
+                                                        <WrapPanel Margin="0,10,0,0">
+                                                            <TextBlock Text="Allergens: " 
+                                                                       FontWeight="SemiBold" 
+                                                                       Foreground="#CCCCCC"/>
+                                                            <ItemsControl ItemsSource="{Binding Allergens}">
+                                                                <ItemsControl.ItemsPanel>
+                                                                    <ItemsPanelTemplate>
+                                                                        <WrapPanel />
+                                                                    </ItemsPanelTemplate>
+                                                                </ItemsControl.ItemsPanel>
+                                                                <ItemsControl.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <Border Background="#2D4263" 
+                                                                                Margin="2" 
+                                                                                Padding="5,2" 
+                                                                                CornerRadius="4">
+                                                                            <TextBlock Text="{Binding Name}" 
+                                                                                       Foreground="White" 
+                                                                                       FontSize="11"/>
+                                                                        </Border>
+                                                                    </DataTemplate>
+                                                                </ItemsControl.ItemTemplate>
+                                                            </ItemsControl>
+                                                        </WrapPanel>
+                                                    </StackPanel>
 
-                                                <StackPanel Grid.Column="1">
-                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" FontSize="14"/>
-                                                    <TextBlock Text="{Binding PortionSize, StringFormat='Portion: {0}g'}" Margin="0,5,0,0"/>
-                                                    <WrapPanel Margin="0,5,0,0">
-                                                        <TextBlock Text="Allergens: " FontWeight="SemiBold"/>
-                                                        <ItemsControl ItemsSource="{Binding Allergens}">
-                                                            <ItemsControl.ItemsPanel>
-                                                                <ItemsPanelTemplate>
-                                                                    <WrapPanel />
-                                                                </ItemsPanelTemplate>
-                                                            </ItemsControl.ItemsPanel>
-                                                            <ItemsControl.ItemTemplate>
-                                                                <DataTemplate>
-                                                                    <TextBlock Text="{Binding Name}" Margin="0,0,5,0"/>
-                                                                </DataTemplate>
-                                                            </ItemsControl.ItemTemplate>
-                                                        </ItemsControl>
-                                                    </WrapPanel>
-                                                </StackPanel>
+                                                    <!-- Price and action buttons with updated styling -->
+                                                    <StackPanel Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                        <TextBlock Text="{Binding Price, StringFormat='{}{0:C}'}" 
+                                                                   FontWeight="Bold" 
+                                                                   FontSize="18" 
+                                                                   Foreground="White" 
+                                                                   HorizontalAlignment="Right"/>
+                                                        <TextBlock Text="Not Available" 
+                                                                   Foreground="#C84B31" 
+                                                                   FontWeight="SemiBold"
+                                                                   Margin="0,5,0,0"
+                                                                   HorizontalAlignment="Right"
+                                                                   Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
+                                                        <Button Content="Add to Cart" 
+                                                                Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=ItemsControl, AncestorLevel=2}}"
+                                                                CommandParameter="{Binding}"
+                                                                Style="{StaticResource AddToCartButtonStyle}"
+                                                                Margin="0,10,0,0" 
+                                                                Padding="15,5"
+                                                                Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </Expander>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </Border>
 
-                                                <StackPanel Grid.Column="2" VerticalAlignment="Top">
-                                                    <TextBlock Text="{Binding Price, StringFormat='{}{0:C}'}" FontWeight="Bold" FontSize="16"/>
-                                                    <TextBlock Text="Not Available" Foreground="Red" 
-                                                              Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
-                                                    <Button Content="Add to Cart" 
-                                                            Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=ItemsControl, AncestorLevel=2}}"
-                                                            CommandParameter="{Binding}"
-                                                            Margin="0,10,0,0" Padding="10,5"
-                                                            Background="#4CAF50" Foreground="White"
-                                                            Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                                </StackPanel>
-                                            </Grid>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </Expander>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
-        </ScrollViewer>
+        <!-- Message with updated style -->
+        <Border Grid.Row="2" Background="#2A2A2A" CornerRadius="5" Margin="0,10,0,0" Padding="10"
+                Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}">
+            <TextBlock Text="{Binding Message}" 
+                       Foreground="#2E8B57"/>
+        </Border>
     </Grid>
 </UserControl>

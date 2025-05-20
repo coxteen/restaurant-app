@@ -4,7 +4,329 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#2A2A2A">
+
+    <UserControl.Resources>
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Admin Button Style -->
+        <Style x:Key="AdminButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2D4263"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D5273"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1D3253"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Status Button Styles -->
+        <Style x:Key="PreparingButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#FF9800"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FFA726"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#FB8C00"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DispatchedButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3E9B67"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1E7B47"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="DeliveredButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#3F51B5"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5C6BC0"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#303F9F"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CancelButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#C84B31"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"
+                                              TextElement.Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D85B41"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#B83B21"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern ListView Style -->
+        <Style x:Key="ModernListViewStyle" TargetType="ListView">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5"/>
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- ListView Item Style -->
+        <Style x:Key="ModernListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#4A4A4A"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#505050"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- GridView Column Header Style - Simpler style with just white text -->
+        <Style x:Key="GridViewColumnHeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Foreground" Value="White"/>
+        </Style>
+
+        <!-- Expander Style -->
+        <Style x:Key="ModernExpanderStyle" TargetType="Expander">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#191919"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Expander">
+                        <Border BorderThickness="{TemplateBinding BorderThickness}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                Background="{TemplateBinding Background}">
+                            <DockPanel>
+                                <ToggleButton x:Name="HeaderSite"
+                                              DockPanel.Dock="Top"
+                                              IsChecked="{Binding IsExpanded, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                              Content="{TemplateBinding Header}"
+                                              Background="Transparent"
+                                              BorderThickness="0"
+                                              Foreground="White"
+                                              Padding="10,5">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Border Background="{TemplateBinding Background}" 
+                                                    Padding="{TemplateBinding Padding}">
+                                                <DockPanel>
+                                                    <Path x:Name="arrow" 
+                                                          Width="10" 
+                                                          Height="10" 
+                                                          Fill="White" 
+                                                          Stretch="Uniform" 
+                                                          DockPanel.Dock="Left"
+                                                          Margin="0,0,10,0"
+                                                          Data="M 0 0 L 4 4 L 0 8 Z"/>
+                                                    <ContentPresenter HorizontalAlignment="Left" 
+                                                                     VerticalAlignment="Center" 
+                                                                     TextElement.Foreground="White"
+                                                                     TextElement.FontWeight="SemiBold"/>
+                                                </DockPanel>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsChecked" Value="True">
+                                                    <Setter TargetName="arrow" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <RotateTransform Angle="90"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <ContentPresenter x:Name="ExpandSite"
+                                                 DockPanel.Dock="Bottom"
+                                                 Visibility="Collapsed"
+                                                 Content="{TemplateBinding Content}"
+                                                 ContentTemplate="{TemplateBinding ContentTemplate}"/>
+                            </DockPanel>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsExpanded" Value="True">
+                                <Setter TargetName="ExpandSite" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- CheckBox Style -->
+        <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="CheckBox">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Border x:Name="checkBoxBorder" 
+                                    Width="18" 
+                                    Height="18" 
+                                    Background="#3A3A3A" 
+                                    BorderBrush="#505050" 
+                                    BorderThickness="1" 
+                                    CornerRadius="3" 
+                                    Margin="0,0,5,0">
+                                <Path x:Name="checkMark" 
+                                      Fill="White" 
+                                      Data="M 1,5 L 4,9 L 9,1" 
+                                      Stretch="Uniform" 
+                                      Stroke="White" 
+                                      StrokeThickness="2" 
+                                      Width="10" 
+                                      Height="10" 
+                                      Visibility="Collapsed"/>
+                            </Border>
+                            <ContentPresenter Grid.Column="1" 
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}" 
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" 
+                                              TextElement.Foreground="White"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="checkMark" Property="Visibility" Value="Visible"/>
+                                <Setter TargetName="checkBoxBorder" Property="Background" Value="#505050"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="checkBoxBorder" Property="BorderBrush" Value="#707070"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,41 +335,90 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <DockPanel Grid.Row="0" Margin="10">
-            <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshCommand}" Padding="10,5"/>
-            <CheckBox DockPanel.Dock="Right" Content="Active Orders Only" IsChecked="{Binding ActiveOrdersOnly}" 
-                      VerticalAlignment="Center" Margin="0,0,20,0"/>
-            <TextBlock Text="All Orders" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
-        </DockPanel>
+        <Border Grid.Row="0" Background="#191919" Padding="15,10">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshCommand}" 
+                        Style="{StaticResource AdminButtonStyle}"/>
+                <CheckBox DockPanel.Dock="Right" Content="Active Orders Only" IsChecked="{Binding ActiveOrdersOnly}" 
+                          VerticalAlignment="Center" Margin="0,0,20,0" 
+                          Style="{StaticResource ModernCheckBoxStyle}"/>
+                <TextBlock Text="All Orders" FontSize="24" FontWeight="SemiBold" 
+                           VerticalAlignment="Center" Foreground="White"/>
+            </DockPanel>
+        </Border>
 
         <!-- Orders List -->
-        <ListView Grid.Row="1" ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" Margin="10">
+        <ListView Grid.Row="1" ItemsSource="{Binding Orders}" SelectedItem="{Binding SelectedOrder}" 
+                  Margin="10" Style="{StaticResource ModernListViewStyle}">
+            <ListView.Resources>
+                <!-- Only set foreground to white, keep default system styling otherwise -->
+                <Style TargetType="GridViewColumnHeader">
+                    <Setter Property="Foreground" Value="White"/>
+                </Style>
+            </ListView.Resources>
             <ListView.View>
                 <GridView>
-                    <GridViewColumn Header="Order ID" DisplayMemberBinding="{Binding OrderId}" Width="70"/>
-                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='{}{0:g}'}" Width="150"/>
-                    <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="150"/>
-                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount, StringFormat='{}{0:C}'}" Width="80"/>
-                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="100"/>
-                    <GridViewColumn Header="Actions" Width="250">
+                    <GridViewColumn Header="Order ID" DisplayMemberBinding="{Binding OrderId}" Width="70">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Date" DisplayMemberBinding="{Binding OrderDate, StringFormat='{}{0:g}'}" Width="150">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Customer" DisplayMemberBinding="{Binding CustomerName}" Width="150">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Total" DisplayMemberBinding="{Binding TotalAmount, StringFormat='{}{0:C}'}" Width="80">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Status" DisplayMemberBinding="{Binding Status}" Width="100">
+                        <GridViewColumn.HeaderTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" Foreground="Black"/>
+                            </DataTemplate>
+                        </GridViewColumn.HeaderTemplate>
+                    </GridViewColumn>
+                    <GridViewColumn Header="Actions" Width="200">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <Button Content="Preparing" Margin="2" Padding="5,2"
+                                    <Button Content="Preparing" Margin="2" Padding="8,3"
                                             Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="Preparing"
+                                            Style="{StaticResource PreparingButtonStyle}"
                                             Visibility="{Binding Status, Converter={StaticResource OrderStatusToVisibilityConverter}, ConverterParameter=Registered}"/>
-                                    <Button Content="Dispatched" Margin="2" Padding="5,2"
+
+                                    <Button Content="Dispatched" Margin="2" Padding="8,3"
                                             Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="Dispatched"
+                                            Style="{StaticResource DispatchedButtonStyle}"
                                             Visibility="{Binding Status, Converter={StaticResource OrderStatusToVisibilityConverter}, ConverterParameter=Preparing}"/>
-                                    <Button Content="Delivered" Margin="2" Padding="5,2"
+
+                                    <Button Content="Delivered" Margin="2" Padding="8,3"
                                             Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="Delivered"
+                                            Style="{StaticResource DeliveredButtonStyle}"
                                             Visibility="{Binding Status, Converter={StaticResource OrderStatusToVisibilityConverter}, ConverterParameter=Dispatched}"/>
-                                    <Button Content="Cancel" Margin="2" Padding="5,2"
+
+                                    <Button Content="Cancel" Margin="2" Padding="8,3"
                                             Command="{Binding DataContext.ChangeStatusCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
                                             CommandParameter="Cancelled"
+                                            Style="{StaticResource CancelButtonStyle}"
                                             Visibility="{Binding Status, Converter={StaticResource OrderStatusToVisibilityConverter}, ConverterParameter=Active}"/>
                                 </StackPanel>
                             </DataTemplate>
@@ -55,63 +426,104 @@
                     </GridViewColumn>
                 </GridView>
             </ListView.View>
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem" BasedOn="{StaticResource ModernListViewItemStyle}"/>
+            </ListView.ItemContainerStyle>
         </ListView>
 
         <!-- Order Details -->
-        <Expander Grid.Row="2" Header="Order Details" Margin="10" IsExpanded="True">
-            <Grid Margin="10">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-
-                <!-- Message -->
-                <TextBlock Grid.Row="0" Text="{Binding Message}" 
-                           Foreground="Green" Margin="0,0,0,10"
-                           Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
-
-                <!-- Customer Information -->
-                <Grid Grid.Row="1" Margin="0,0,0,10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+        <Expander Grid.Row="2" Header="Order Details" Margin="10" IsExpanded="True" 
+                 Style="{StaticResource ModernExpanderStyle}">
+            <Border Background="#191919" Padding="15" CornerRadius="0,0,5,5">
+                <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Customer:" FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedOrder.CustomerName}" Margin="0,0,20,5"/>
+                    <!-- Message -->
+                    <TextBlock Grid.Row="0" Text="{Binding Message}" 
+                               Foreground="#4CAF50" Margin="0,0,0,10"
+                               Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
 
-                    <TextBlock Grid.Row="0" Grid.Column="2" Text="Phone:" FontWeight="Bold" Margin="0,0,10,5"/>
-                    <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding SelectedOrder.CustomerPhone}" Margin="0,0,0,5"/>
+                    <!-- Customer Information -->
+                    <Grid Grid.Row="1" Margin="0,0,0,15">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" FontWeight="Bold" Margin="0,0,10,0"/>
-                    <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" Text="{Binding SelectedOrder.DeliveryAddress}" TextWrapping="Wrap"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Customer:" FontWeight="Bold" 
+                                  Margin="0,0,10,5" Foreground="#CCCCCC"/>
+                        <TextBlock Grid.Row="0" Grid.Column="1" Text="{Binding SelectedOrder.CustomerName}" 
+                                  Margin="0,0,20,5" Foreground="White"/>
+
+                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Phone:" FontWeight="Bold" 
+                                  Margin="0,0,10,5" Foreground="#CCCCCC"/>
+                        <TextBlock Grid.Row="0" Grid.Column="3" Text="{Binding SelectedOrder.CustomerPhone}" 
+                                  Margin="0,0,0,5" Foreground="White"/>
+
+                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Address:" FontWeight="Bold" 
+                                  Margin="0,0,10,0" Foreground="#CCCCCC"/>
+                        <TextBlock Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3" 
+                                  Text="{Binding SelectedOrder.DeliveryAddress}" 
+                                  TextWrapping="Wrap" Foreground="White"/>
+                    </Grid>
+
+                    <!-- Order Items -->
+                    <ListView Grid.Row="2" ItemsSource="{Binding SelectedOrder.OrderItems}" 
+                             MaxHeight="200" Style="{StaticResource ModernListViewStyle}">
+                        <ListView.Resources>
+                            <!-- Only set foreground to white, keep default system styling otherwise -->
+                            <Style TargetType="GridViewColumnHeader">
+                                <Setter Property="Foreground" Value="White"/>
+                            </Style>
+                        </ListView.Resources>
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="200">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Foreground="White"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Unit Price" DisplayMemberBinding="{Binding UnitPrice, StringFormat='{}{0:C}'}" Width="100">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Foreground="White"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}" Width="70">
+                                    <GridViewColumn.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding}" Foreground="White"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.HeaderTemplate>
+                                </GridViewColumn>
+                                <GridViewColumn Header="Total" Width="100">
+                                    <GridViewColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:C}'}" Foreground="White"/>
+                                        </DataTemplate>
+                                    </GridViewColumn.CellTemplate>
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem" BasedOn="{StaticResource ModernListViewItemStyle}"/>
+                        </ListView.ItemContainerStyle>
+                    </ListView>
                 </Grid>
-
-                <!-- Order Items -->
-                <ListView Grid.Row="2" ItemsSource="{Binding SelectedOrder.OrderItems}" MaxHeight="200">
-                    <ListView.View>
-                        <GridView>
-                            <GridViewColumn Header="Product" DisplayMemberBinding="{Binding ProductName}" Width="200"/>
-                            <GridViewColumn Header="Unit Price" DisplayMemberBinding="{Binding UnitPrice, StringFormat='{}{0:C}'}" Width="100"/>
-                            <GridViewColumn Header="Quantity" DisplayMemberBinding="{Binding Quantity}" Width="70"/>
-                            <GridViewColumn Header="Total" Width="100">
-                                <GridViewColumn.CellTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding TotalPrice, StringFormat='{}{0:C}'}" />
-                                    </DataTemplate>
-                                </GridViewColumn.CellTemplate>
-                            </GridViewColumn>
-                        </GridView>
-                    </ListView.View>
-                </ListView>
-            </Grid>
+            </Border>
         </Expander>
     </Grid>
 </UserControl>

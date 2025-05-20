@@ -4,7 +4,172 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#2A2A2A">
+
+    <UserControl.Resources>
+        <!-- Modern Button Style (copied from MainWindow) -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Admin Button Style (based on MainWindow blue style) -->
+        <Style x:Key="AdminButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2D4263"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D5273"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1D3253"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Cart Button Style (red buttons for deletion/removal) -->
+        <Style x:Key="CartButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#C84B31"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D85B41"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#B83B21"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Navigation Button Style -->
+        <Style x:Key="NavButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#191919"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#292929"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#090909"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TextBox Style (from RegisterView) -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="Margin" Value="0,2,0,10"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                Padding="2">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Focusable="false" 
+                                          HorizontalScrollBarVisibility="Hidden" 
+                                          VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Label Style (from RegisterView) -->
+        <Style x:Key="LabelStyle" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Margin" Value="0,10,0,3"/>
+        </Style>
+
+        <!-- ListView Style -->
+        <Style x:Key="ModernListViewStyle" TargetType="ListView">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="5"/>
+        </Style>
+
+        <!-- ListView Item Style -->
+        <Style x:Key="ModernListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#4A4A4A"/>
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#3D3D3D"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -13,33 +178,87 @@
         </Grid.RowDefinitions>
 
         <!-- Header -->
-        <DockPanel Grid.Row="0" Margin="10">
-            <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshCommand}" Padding="10,5"/>
-            <TextBlock Text="Manage Categories" FontSize="24" FontWeight="SemiBold" VerticalAlignment="Center"/>
-        </DockPanel>
+        <Border Grid.Row="0" Background="#191919" Padding="15,10">
+            <DockPanel>
+                <Button DockPanel.Dock="Right" Content="Refresh" 
+                        Command="{Binding RefreshCommand}" 
+                        Style="{StaticResource AdminButtonStyle}"/>
+                <TextBlock Text="Manage Categories" 
+                           FontSize="20" 
+                           FontWeight="Bold" 
+                           VerticalAlignment="Center" 
+                           Foreground="White"/>
+            </DockPanel>
+        </Border>
 
         <!-- Categories List -->
-        <ListView Grid.Row="1" ItemsSource="{Binding Categories}" SelectedItem="{Binding SelectedCategory}" Margin="10">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200"/>
-                    <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" Width="400"/>
-                    <GridViewColumn Header="Actions" Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button Content="Edit" Margin="0,0,5,0" Click="EditButton_Click"/>
-                                    <Button Content="Delete" Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <Border Grid.Row="1" 
+                Background="#3A3A3A"
+                Margin="15,15,15,0"
+                CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="2" Opacity="0.3" BlurRadius="10"/>
+            </Border.Effect>
+
+            <ListView ItemsSource="{Binding Categories}" 
+                      SelectedItem="{Binding SelectedCategory}"
+                      Style="{StaticResource ModernListViewStyle}">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="200">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="Black" FontWeight="SemiBold"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Description" DisplayMemberBinding="{Binding Description}" Width="400">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="Black" FontWeight="SemiBold"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Actions" Width="120">
+                            <GridViewColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="White" FontWeight="SemiBold"/>
+                                </DataTemplate>
+                            </GridViewColumn.HeaderTemplate>
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Button Content="Edit" 
+                                                Margin="0,0,5,0" 
+                                                Click="EditButton_Click"
+                                                Style="{StaticResource AdminButtonStyle}"
+                                                Padding="8,3"/>
+                                        <Button Content="Delete" 
+                                                Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                                Style="{StaticResource CartButtonStyle}"
+                                                Padding="8,3"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource ModernListViewItemStyle}"/>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </Border>
 
         <!-- Add/Edit Form -->
-        <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0" Padding="10">
+        <Border Grid.Row="2" 
+                Background="#191919" 
+                Margin="15,15,15,15"
+                Padding="25,20"
+                CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="3" Opacity="0.3" BlurRadius="10"/>
+            </Border.Effect>
+
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -54,29 +273,64 @@
                 </Grid.ColumnDefinitions>
 
                 <!-- Message -->
-                <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="{Binding Message}" 
-                           Foreground="Green" Margin="0,0,0,10"
-                           Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+                <Border Grid.Row="0" Grid.ColumnSpan="2" 
+                       Background="#2E8B57" 
+                       CornerRadius="5" 
+                       Padding="10,8" 
+                       Margin="0,0,0,15"
+                       Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}">
+                    <TextBlock Text="{Binding Message}" Foreground="White"/>
+                </Border>
 
                 <!-- Form Title -->
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" Text="{Binding IsEditing, Converter={StaticResource BoolToStringConverter}, ConverterParameter='Edit Category|Add New Category'}" 
-                           FontWeight="SemiBold" FontSize="16" Margin="0,0,0,10"/>
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" 
+                           Text="{Binding IsEditing, Converter={StaticResource BoolToStringConverter}, ConverterParameter='Edit Category|Add New Category'}" 
+                           FontWeight="Bold" 
+                           FontSize="18" 
+                           Margin="0,0,0,15"
+                           Foreground="White"/>
 
                 <!-- Name -->
-                <TextBlock Grid.Row="2" Grid.Column="0" Text="Name:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding NewCategory.Name, UpdateSourceTrigger=PropertyChanged}" Padding="5"/>
+                <TextBlock Grid.Row="2" Grid.Column="0" 
+                           Text="Name:" 
+                           Style="{StaticResource LabelStyle}"
+                           VerticalAlignment="Center" 
+                           Margin="0,0,15,0"/>
+                <TextBox Grid.Row="2" Grid.Column="1"
+                         Text="{Binding NewCategory.Name, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource ModernTextBoxStyle}"/>
 
                 <!-- Description -->
-                <TextBlock Grid.Row="3" Grid.Column="0" Text="Description:" VerticalAlignment="Top" Margin="0,10,10,0"/>
-                <TextBox Grid.Row="3" Grid.Column="1" Text="{Binding NewCategory.Description, UpdateSourceTrigger=PropertyChanged}" 
-                         TextWrapping="Wrap" AcceptsReturn="True" Height="60" Padding="5" Margin="0,10,0,0"/>
+                <TextBlock Grid.Row="3" Grid.Column="0" 
+                           Text="Description:" 
+                           Style="{StaticResource LabelStyle}"
+                           VerticalAlignment="Top"/>
+                <TextBox Grid.Row="3" Grid.Column="1" 
+                         Text="{Binding NewCategory.Description, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource ModernTextBoxStyle}"
+                         TextWrapping="Wrap" 
+                         AcceptsReturn="True" 
+                         Height="80"/>
 
                 <!-- Buttons -->
-                <StackPanel Grid.Row="4" Grid.Column="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                    <Button Content="Cancel" Command="{Binding CancelCommand}" Padding="10,5" Margin="0,0,10,0"/>
-                    <Button Content="Add" Command="{Binding AddCommand}" Padding="10,5" Background="#4CAF50" Foreground="White"
+                <StackPanel Grid.Row="4" Grid.Column="1" 
+                            Orientation="Horizontal" 
+                            HorizontalAlignment="Right" 
+                            Margin="0,15,0,0">
+                    <Button Content="Cancel" 
+                            Command="{Binding CancelCommand}" 
+                            Padding="15,8" 
+                            Margin="0,0,10,0"
+                            Style="{StaticResource NavButtonStyle}"/>
+                    <Button Content="Add" 
+                            Command="{Binding AddCommand}" 
+                            Padding="15,8" 
+                            Style="{StaticResource AdminButtonStyle}"
                             Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter=Inverse}"/>
-                    <Button Content="Update" Command="{Binding UpdateCommand}" Padding="10,5" Background="#2196F3" Foreground="White"
+                    <Button Content="Update" 
+                            Command="{Binding UpdateCommand}" 
+                            Padding="15,8" 
+                            Style="{StaticResource AdminButtonStyle}"
                             Visibility="{Binding IsEditing, Converter={StaticResource BoolToVisibilityConverter}}"/>
                 </StackPanel>
             </Grid>

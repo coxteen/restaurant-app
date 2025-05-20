@@ -6,8 +6,147 @@
         xmlns:views="clr-namespace:RestaurantApp.Views"
         xmlns:local="clr-namespace:RestaurantApp"
         mc:Ignorable="d"
-        Title="Restaurant App" Height="600" Width="900"
+        Title="Restaurant App" 
+        Height="1000" 
+        Width="1300"
+        WindowStartupLocation="CenterScreen"
+        Background="#3A3A3A"
         x:Name="window">
+
+    <Window.Resources>
+        <!-- Modern Button Style -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Admin Button Style -->
+        <Style x:Key="AdminButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2D4263"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3D5273"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1D3253"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Cart Button Style -->
+        <Style x:Key="CartButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#C84B31"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D85B41"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#B83B21"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Auth Button Style -->
+        <Style x:Key="AuthButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3E9B67"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1E7B47"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Navigation Button Style -->
+        <Style x:Key="NavButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#191919"/>
+            <Setter Property="Width" Value="110"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#292929"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#090909"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -15,46 +154,82 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- User Info Panel -->
-        <DockPanel Grid.Row="0" Background="#333333">
-            <Button x:Name="btnLogin" Content="Login" Click="LoginButton_Click" 
-                    DockPanel.Dock="Right" Margin="5" Padding="10,5"/>
-            <Button x:Name="btnLogout" Content="Logout" Click="LogoutButton_Click" 
-                    DockPanel.Dock="Right" Margin="5" Padding="10,5" Visibility="Collapsed"/>
-            <!-- In MainWindow.xaml, replace the CartButtonControl with this button -->
-            <Button x:Name="btnCart" DockPanel.Dock="Right" Click="CartButton_Click" 
-        Margin="5" Padding="10,5">
-                <StackPanel Orientation="Horizontal">
-                    <TextBlock Text="🛒" FontSize="14" VerticalAlignment="Center"/>
-                    <TextBlock Text="Cart" Margin="5,0,0,0" VerticalAlignment="Center"/>
-                    <Border Background="#4CAF50" CornerRadius="10" Margin="5,0,0,0" 
-                Visibility="{Binding ShoppingCartItemCount, Converter={StaticResource IntToVisibilityConverter}}">
-                        <TextBlock Text="{Binding ShoppingCartItemCount}" Foreground="White" Margin="5,0" FontSize="10"/>
-                    </Border>
+        <!-- Top Bar with App Title and User Info -->
+        <Border Grid.Row="0" Background="#191919" Padding="15,10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- App Logo & Title -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Text="🍽️" FontSize="22" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="White"/>
+                    <TextBlock Text="Restaurant App" FontSize="20" FontWeight="Bold" VerticalAlignment="Center" Foreground="White"/>
                 </StackPanel>
-            </Button>
-            <TextBlock x:Name="userInfoText" Foreground="White" VerticalAlignment="Center" 
-                      Margin="10,0,0,0" FontSize="14"/>
-        </DockPanel>
+
+                <!-- User Info -->
+                <TextBlock Grid.Column="1" x:Name="userInfoText" Foreground="#EEEEEE" VerticalAlignment="Center" 
+                           HorizontalAlignment="Center" FontSize="16" FontWeight="Medium"/>
+
+                <!-- Auth Buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <!-- Cart Button -->
+                    <Button x:Name="btnCart" Click="CartButton_Click" Style="{StaticResource CartButtonStyle}" 
+                            Margin="5,0,15,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🛒" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="Cart" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                            <Border Background="#FFFFFF" CornerRadius="10" Margin="5,0,0,0" 
+                                    Visibility="{Binding ShoppingCartItemCount, Converter={StaticResource IntToVisibilityConverter}}">
+                                <TextBlock Text="{Binding ShoppingCartItemCount}" Foreground="#C84B31" Margin="5,0" FontSize="12" FontWeight="Bold"/>
+                            </Border>
+                        </StackPanel>
+                    </Button>
+
+                    <Button x:Name="btnLogin" Content="Login" Click="LoginButton_Click" 
+                            Style="{StaticResource AuthButtonStyle}"/>
+                    <Button x:Name="btnLogout" Content="Logout" Click="LogoutButton_Click" 
+                            Style="{StaticResource AuthButtonStyle}" Visibility="Collapsed"/>
+                </StackPanel>
+            </Grid>
+        </Border>
 
         <!-- Navigation Panel -->
-        <StackPanel Grid.Row="1" Orientation="Horizontal" Background="#F5F5F5">
-            <Button Content="Menu" Margin="5" Padding="10,5" Click="MenuButton_Click"/>
-            <Button Content="Search" Margin="5" Padding="10,5" Click="SearchButton_Click"/>
-            <Button x:Name="btnOrders" Content="My Orders" Margin="5" Padding="10,5" 
-                   Click="OrdersButton_Click" Visibility="Collapsed"/>
+        <Border Grid.Row="1" Background="#2A2A2A" Padding="15,12">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
 
-            <!-- Admin Panel -->
-            <StackPanel x:Name="adminPanel" Orientation="Horizontal" Visibility="Collapsed">
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="5,0"/>
-                <Button Content="Categories" Margin="5" Padding="10,5" Click="CategoriesButton_Click"/>
-                <Button Content="Products" Margin="5" Padding="10,5" Click="ProductsButton_Click"/>
-                <Button Content="All Orders" Margin="5" Padding="10,5" Click="AllOrdersButton_Click"/>
-                <Button Content="Stock Alert" Margin="5" Padding="10,5" Click="StockAlertButton_Click"/>
-            </StackPanel>
-        </StackPanel>
+                <!-- Main Navigation -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <Button Content="Menu" Style="{StaticResource NavButtonStyle}" Click="MenuButton_Click"/>
+                    <Button Content="Search" Style="{StaticResource NavButtonStyle}" Click="SearchButton_Click"/>
+                    <Button x:Name="btnOrders" Content="My Orders" Style="{StaticResource NavButtonStyle}" 
+                           Click="OrdersButton_Click" Visibility="Collapsed"/>
+                </StackPanel>
 
-        <!-- Main Content -->
-        <ContentControl Grid.Row="2" x:Name="MainContent"/>
+                <!-- Admin Panel -->
+                <StackPanel Grid.Column="2" x:Name="adminPanel" Orientation="Horizontal" Visibility="Collapsed">
+                    <Separator Background="#4A4A4A" Width="1" Margin="10,0"/>
+                    <Button Content="Categories" Style="{StaticResource AdminButtonStyle}" Click="CategoriesButton_Click"/>
+                    <Button Content="Products" Style="{StaticResource AdminButtonStyle}" Click="ProductsButton_Click"/>
+                    <Button Content="All Orders" Style="{StaticResource AdminButtonStyle}" Click="AllOrdersButton_Click"/>
+                    <Button Content="Stock Alert" Style="{StaticResource AdminButtonStyle}" Click="StockAlertButton_Click"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content with Shadow Effect -->
+        <Border Grid.Row="2" Background="#2A2A2A" Margin="15" CornerRadius="8">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="2" Opacity="0.3" BlurRadius="10"/>
+            </Border.Effect>
+            <ContentControl x:Name="MainContent" Margin="5"/>
+        </Border>
     </Grid>
 </Window>

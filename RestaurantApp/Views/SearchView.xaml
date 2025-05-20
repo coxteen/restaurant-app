@@ -4,7 +4,163 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" 
-             d:DesignHeight="600" d:DesignWidth="800">
+             d:DesignHeight="600" d:DesignWidth="800"
+             Background="#2A2A2A">
+
+    <UserControl.Resources>
+        <!-- Modern Button Style (copied from MainWindow) -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Background" Value="#4A4A4A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#5A5A5A"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#3A3A3A"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Add to Cart Button Style (similar to Cart style from MainWindow) -->
+        <Style x:Key="AddToCartButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#C84B31"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#D85B41"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#B83B21"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Search Button Style (similar to Auth style from MainWindow) -->
+        <Style x:Key="SearchButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernButtonStyle}">
+            <Setter Property="Background" Value="#2E8B57"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#3E9B67"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#1E7B47"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ListView Style -->
+        <Style x:Key="ModernListViewStyle" TargetType="ListView">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Margin" Value="0,5"/>
+        </Style>
+
+        <!-- ListView Item Style -->
+        <Style x:Key="ModernListViewItemStyle" TargetType="ListViewItem">
+            <Setter Property="Height" Value="60"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                        <Border x:Name="Border" 
+                                Padding="5" 
+                                SnapsToDevicePixels="true"
+                                Background="{TemplateBinding Background}">
+                            <GridViewRowPresenter VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#4A4A4A"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="#2E8B57"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern TextBox Style -->
+        <Style x:Key="ModernTextBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#3A3A3A"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="8,5"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="5" 
+                                Padding="2">
+                            <ScrollViewer x:Name="PART_ContentHost" 
+                                          Focusable="false" 
+                                          HorizontalScrollBarVisibility="Hidden" 
+                                          VerticalScrollBarVisibility="Hidden"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Modern RadioButton Style -->
+        <Style x:Key="ModernRadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <!-- Modern CheckBox Style -->
+        <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin" Value="0,0,10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+    </UserControl.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,8 +168,11 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <!-- Search Controls -->
-        <Border Grid.Row="0" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Padding="10">
+        <!-- Search Controls with shadow effect -->
+        <Border Grid.Row="0" Background="#191919" Padding="15,12" CornerRadius="5" Margin="0,0,0,10">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Opacity="0.3" BlurRadius="5"/>
+            </Border.Effect>
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
@@ -22,77 +181,101 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <TextBox Grid.Column="0" Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" 
-                         Padding="5" Margin="0,0,10,0" 
+                <TextBox Grid.Column="0" 
+                         Text="{Binding SearchTerm, UpdateSourceTrigger=PropertyChanged}" 
+                         Style="{StaticResource ModernTextBoxStyle}"
+                         Margin="0,0,10,0" 
                          VerticalContentAlignment="Center"/>
 
                 <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="0,0,10,0">
-                    <RadioButton Content="Search by Name" IsChecked="{Binding SearchForAllergen, Converter={StaticResource InverseBooleanConverter}}" 
-                                 VerticalContentAlignment="Center" Margin="0,0,5,0"/>
-                    <RadioButton Content="Search by Allergen" IsChecked="{Binding SearchForAllergen}" 
-                                 VerticalContentAlignment="Center"/>
+                    <RadioButton Content="Search by Name" 
+                                 IsChecked="{Binding SearchForAllergen, Converter={StaticResource InverseBooleanConverter}}" 
+                                 Style="{StaticResource ModernRadioButtonStyle}"
+                                 Margin="0,0,5,0"/>
+                    <RadioButton Content="Search by Allergen" 
+                                 IsChecked="{Binding SearchForAllergen}" 
+                                 Style="{StaticResource ModernRadioButtonStyle}"/>
                 </StackPanel>
 
-                <CheckBox Grid.Column="2" Content="Invert Search (NOT)" IsChecked="{Binding InvertSearch}" 
-                          VerticalContentAlignment="Center" Margin="0,0,10,0"/>
+                <CheckBox Grid.Column="2" 
+                          Content="Invert Search (NOT)" 
+                          IsChecked="{Binding InvertSearch}" 
+                          Style="{StaticResource ModernCheckBoxStyle}"
+                          Margin="0,0,10,0"/>
 
-                <Button Grid.Column="3" Content="Search" Command="{Binding SearchCommand}" 
-                        Padding="15,5"/>
+                <Button Grid.Column="3" 
+                        Content="Search" 
+                        Command="{Binding SearchCommand}" 
+                        Style="{StaticResource SearchButtonStyle}"/>
             </Grid>
         </Border>
 
-        <!-- Message -->
-        <TextBlock Grid.Row="2" Text="{Binding Message}" 
-                   Foreground="Green" Margin="10"
-                   Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}"/>
+        <!-- Search Results with shadow effect -->
+        <Border Grid.Row="1" Background="#3A3A3A" CornerRadius="5" Margin="0,5">
+            <Border.Effect>
+                <DropShadowEffect ShadowDepth="1" Opacity="0.3" BlurRadius="5"/>
+            </Border.Effect>
+            <ListView ItemsSource="{Binding SearchResults}" 
+                      Style="{StaticResource ModernListViewStyle}"
+                      ItemContainerStyle="{StaticResource ModernListViewItemStyle}"
+                      Margin="5">
+                <ListView.View>
+                    <GridView>
+                        <GridViewColumn Header="Category" DisplayMemberBinding="{Binding CategoryName}" Width="100"/>
+                        <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
+                        <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:C}'}" Width="70"/>
+                        <GridViewColumn Header="Portion" DisplayMemberBinding="{Binding PortionSize, StringFormat='{}{0}g'}" Width="70"/>
+                        <GridViewColumn Header="Available" Width="80">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <CheckBox IsChecked="{Binding IsAvailable}" 
+                                              IsEnabled="False" 
+                                              HorizontalAlignment="Center"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Allergens" Width="150">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <ItemsControl ItemsSource="{Binding Allergens}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Background="#2D4263" Margin="2" Padding="3,1" CornerRadius="3">
+                                                    <TextBlock Text="{Binding Name}" FontSize="10" Foreground="White"/>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                        <GridViewColumn Header="Actions" Width="130">
+                            <GridViewColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Content="Add to Cart" 
+                                            Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
+                                            CommandParameter="{Binding}"
+                                            Style="{StaticResource AddToCartButtonStyle}"
+                                            Padding="10,3"
+                                            Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                </DataTemplate>
+                            </GridViewColumn.CellTemplate>
+                        </GridViewColumn>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+        </Border>
 
-        <!-- Search Results -->
-        <ListView Grid.Row="1" ItemsSource="{Binding SearchResults}" Margin="10">
-            <ListView.View>
-                <GridView>
-                    <GridViewColumn Header="Category" DisplayMemberBinding="{Binding CategoryName}" Width="100"/>
-                    <GridViewColumn Header="Name" DisplayMemberBinding="{Binding Name}" Width="150"/>
-                    <GridViewColumn Header="Price" DisplayMemberBinding="{Binding Price, StringFormat='{}{0:C}'}" Width="70"/>
-                    <GridViewColumn Header="Portion" DisplayMemberBinding="{Binding PortionSize, StringFormat='{}{0}g'}" Width="70"/>
-                    <GridViewColumn Header="Available" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <CheckBox IsChecked="{Binding IsAvailable}" IsEnabled="False" HorizontalAlignment="Center"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Allergens" Width="150">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <ItemsControl ItemsSource="{Binding Allergens}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <WrapPanel />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate>
-                                            <Border Background="#FFE0E0" Margin="2" Padding="2" CornerRadius="3">
-                                                <TextBlock Text="{Binding Name}" FontSize="10"/>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                    <GridViewColumn Header="Actions" Width="100">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Content="Add to Cart" 
-                                        Command="{Binding DataContext.AddToCartCommand, RelativeSource={RelativeSource AncestorType=ListView}}"
-                                        CommandParameter="{Binding}"
-                                        Visibility="{Binding IsAvailable, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-                </GridView>
-            </ListView.View>
-        </ListView>
+        <!-- Message with updated style -->
+        <Border Grid.Row="2" Background="#2A2A2A" CornerRadius="5" Margin="0,10,0,0" Padding="10"
+                Visibility="{Binding Message, Converter={StaticResource StringToVisibilityConverter}}">
+            <TextBlock Text="{Binding Message}" 
+                       Foreground="#2E8B57"/>
+        </Border>
     </Grid>
 </UserControl>
