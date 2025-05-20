@@ -242,6 +242,18 @@ namespace RestaurantApp
             }
         }
 
+        private void ContactButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Show the contact overlay
+            contactOverlay.Visibility = Visibility.Visible;
+        }
+
+        private void CloseContactOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            // Hide the contact overlay
+            contactOverlay.Visibility = Visibility.Collapsed;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
