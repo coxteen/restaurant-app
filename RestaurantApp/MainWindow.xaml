@@ -235,6 +235,15 @@
                         </StackPanel>
                     </Button>
 
+                    <!-- About Me Button (NEW) -->
+                    <Button x:Name="btnAboutMe" Click="AboutMeButton_Click" Style="{StaticResource ContactButtonStyle}" 
+                            Margin="5,0,5,0">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👤" FontSize="14" VerticalAlignment="Center"/>
+                            <TextBlock Text="About Me" Margin="5,0,0,0" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </Button>
+
                     <!-- Cart Button -->
                     <Button x:Name="btnCart" Click="CartButton_Click" Style="{StaticResource CartButtonStyle}" 
                             Margin="5,0,15,0">
@@ -294,7 +303,7 @@
 
         <!-- Contact Info Overlay -->
         <Border x:Name="contactOverlay" Background="#80000000" Visibility="Collapsed" Grid.RowSpan="3">
-            <Border Width="500" Height="450" Background="#2A2A2A" CornerRadius="10" Padding="0">
+            <Border Width="500" Height="560" Background="#2A2A2A" CornerRadius="10" Padding="0">
                 <Grid>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
@@ -385,6 +394,75 @@
 
                     <!-- Close Button -->
                     <Button Grid.Row="2" Content="Close" Click="CloseContactOverlay_Click" 
+                            Style="{StaticResource DialogButtonStyle}" 
+                            HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                </Grid>
+            </Border>
+        </Border>
+
+        <!-- About Me Overlay (NEW) -->
+        <Border x:Name="aboutMeOverlay" Background="#80000000" Visibility="Collapsed" Grid.RowSpan="3">
+            <Border Width="500" Height="410" Background="#2A2A2A" CornerRadius="10" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Overlay Header -->
+                    <Border Grid.Row="0" Background="#191919" CornerRadius="10,10,0,0" Padding="20,15">
+                        <Grid>
+                            <TextBlock Text="About Me" FontSize="22" Foreground="White" 
+                                       FontWeight="Bold" HorizontalAlignment="Left"/>
+                            <Button Content="✕" Click="CloseAboutMeOverlay_Click" 
+                                    HorizontalAlignment="Right" Width="30" Height="30"
+                                    Background="Transparent" Foreground="White" 
+                                    BorderThickness="0" FontSize="16" FontWeight="Bold"/>
+                        </Grid>
+                    </Border>
+
+                    <!-- About Me Information -->
+                    <StackPanel Grid.Row="1" Margin="25,20">
+                        <!-- Profile Icon and Name -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                            <TextBlock Text="👤" FontSize="32" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="White"/>
+                            <StackPanel>
+                                <TextBlock x:Name="studentNameText" Text="Your Name" FontSize="22" FontWeight="Bold" Foreground="White"/>
+                                <TextBlock Text="Computer Science Student" FontSize="14" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- University Information -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock Text="🏫" FontSize="22" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="White"/>
+                            <StackPanel>
+                                <TextBlock Text="University" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock x:Name="universityNameText" Text="Your University" FontSize="14" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Study Year -->
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
+                            <TextBlock Text="📚" FontSize="22" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="White"/>
+                            <StackPanel>
+                                <TextBlock Text="Study Year" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock x:Name="studyYearText" Text="Year X" FontSize="14" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+
+                        <!-- Group -->
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="👥" FontSize="22" VerticalAlignment="Center" Margin="0,0,15,0" Foreground="White"/>
+                            <StackPanel>
+                                <TextBlock Text="Group" FontSize="16" FontWeight="SemiBold" Foreground="White"/>
+                                <TextBlock x:Name="groupText" Text="Group XXX" FontSize="14" Foreground="#CCCCCC" Margin="0,5,0,0"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Close Button -->
+                    <Button Grid.Row="2" Content="Close" Click="CloseAboutMeOverlay_Click" 
                             Style="{StaticResource DialogButtonStyle}" 
                             HorizontalAlignment="Center" Margin="0,0,0,20"/>
                 </Grid>

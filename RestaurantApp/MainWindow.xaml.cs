@@ -254,6 +254,26 @@ namespace RestaurantApp
             contactOverlay.Visibility = Visibility.Collapsed;
         }
 
+        // Event handler for clicking the About Me button
+        private void AboutMeButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Set student information here
+            studentNameText.Text = "Ghiujan Costin";         // Replace with your actual name
+            universityNameText.Text = "Unitbv Mate Info"; // Replace with your university name
+            studyYearText.Text = "Second year";              // Replace with your study year
+            groupText.Text = "10LF232";              // Replace with your group
+
+            // Show the About Me overlay
+            aboutMeOverlay.Visibility = Visibility.Visible;
+        }
+
+        // Event handler for closing the About Me overlay
+        private void CloseAboutMeOverlay_Click(object sender, RoutedEventArgs e)
+        {
+            // Hide the About Me overlay
+            aboutMeOverlay.Visibility = Visibility.Collapsed;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
