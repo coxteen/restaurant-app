@@ -176,4 +176,4 @@ Change the values in `App.config` to adjust the defaults for your local build.
 ## 📄 License & Author
 
 - **Author:** [Costin Ghiujan](https://github.com/coxteen)
-- **License:** MIT. See [`LICENSE.txt`](LICENSE.txt).
+- **License:** Released under the [MIT License](LICENSE.txt).
