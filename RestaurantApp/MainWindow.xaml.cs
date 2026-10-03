@@ -55,7 +55,19 @@ namespace RestaurantApp
             // Save cart changes if the user is logged in and we're not in the process of loading
             if (_userService.IsAuthenticated && !_isLoadingCart)
             {
-                _cartService.SaveCartItems(_userService.CurrentUser.UserId, _shoppingCart);
+                try
+                {
+                    // Guard against unexpected null CurrentUser
+                    if (_userService.CurrentUser != null)
+                    {
+                        _cartService.SaveCartItems(_userService.CurrentUser.UserId, _shoppingCart);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Don't let persistence errors crash the UI. Log and continue.
+                    Console.WriteLine($"Error saving cart on collection change: {ex.Message}");
+                }
             }
         }
 

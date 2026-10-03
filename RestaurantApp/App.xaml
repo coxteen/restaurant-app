@@ -4,6 +4,12 @@
              xmlns:helpers="clr-namespace:RestaurantApp.Helpers"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Theme.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Existing converters and helpers -->
         <helpers:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
         <helpers:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
         <helpers:StringToVisibilityConverter x:Key="StringToVisibilityConverter"/>
@@ -19,5 +25,6 @@
         <helpers:ZeroToVisibilityConverter x:Key="ZeroToVisibilityConverter"/>
         <helpers:NonZeroToVisibilityConverter x:Key="NonZeroToVisibilityConverter"/>
         <helpers:NonZeroDecimalToVisibilityConverter x:Key="NonZeroDecimalToVisibilityConverter"/>
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

@@ -52,13 +52,22 @@ namespace RestaurantApp.ViewModels
 
         private void ExecuteLogin(object parameter)
         {
-            if (_userService.Login(Email, Password))
+            try
             {
-                _onLoginSuccess();
+                bool success = _userService.Login(Email, Password);
+                if (success)
+                {
+                    _onLoginSuccess?.Invoke();
+                }
+                else
+                {
+                    ErrorMessage = "Invalid email or password.";
+                }
             }
-            else
+            catch (Exception ex)
             {
-                ErrorMessage = "Invalid email or password.";
+                // Surface friendly error instead of crashing the UI
+                ErrorMessage = $"Login failed: {ex.Message}";
             }
         }
     }

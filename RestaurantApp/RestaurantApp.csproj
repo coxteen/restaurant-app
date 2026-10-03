@@ -13,4 +13,13 @@
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
   </ItemGroup>
 
+  <!-- Exclude old Styles.xaml from being compiled as a Page to avoid XAML parsing errors
+       It's kept in the repository but not loaded; Theme.xaml is used instead. -->
+  <ItemGroup>
+    <Page Remove="Resources/Styles.xaml" />
+    <None Include="Resources/Styles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </None>
+  </ItemGroup>
+
 </Project>

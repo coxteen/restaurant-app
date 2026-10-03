@@ -50,8 +50,19 @@ namespace RestaurantApp.ViewModels
             RemoveItemCommand = new RelayCommand(ExecuteRemoveItem);
             ClearCartCommand = new RelayCommand(_ =>
             {
-                Cart.Clear();
-                OnPropertyChanged(nameof(CanCheckout));
+                try
+                {
+                    Cart?.Clear();
+                }
+                catch (Exception ex)
+                {
+                    // Surface a friendly message instead of crashing the UI
+                    Message = $"Unable to clear cart: {ex.Message}";
+                }
+                finally
+                {
+                    OnPropertyChanged(nameof(CanCheckout));
+                }
             });
         }
 

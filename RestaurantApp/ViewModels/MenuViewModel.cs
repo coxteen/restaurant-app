@@ -42,19 +42,39 @@ namespace RestaurantApp.ViewModels
 
         private void LoadMenu()
         {
-            var categories = _categoryService.GetAllCategories();
-            var products = _productService.GetAllProducts();
-
-            var categoriesWithProducts = categories.Select(c => new CategoryWithProducts
+            try
             {
-                CategoryId = c.CategoryId,
-                Name = c.Name,
-                Description = c.Description,
-                Products = new ObservableCollection<Product>(
-                    products.Where(p => p.CategoryId == c.CategoryId).ToList())
-            }).ToList();
+                var categories = _categoryService.GetAllCategories();
+                var products = _productService.GetAllProducts();
 
-            Categories = new ObservableCollection<CategoryWithProducts>(categoriesWithProducts);
+                var categoriesWithProducts = categories.Select(c => new CategoryWithProducts
+                {
+                    CategoryId = c.CategoryId,
+                    Name = c.Name,
+                    Description = c.Description,
+                    Products = new ObservableCollection<Product>(
+                        products.Where(p => p.CategoryId == c.CategoryId).ToList())
+                }).ToList();
+
+                Categories = new ObservableCollection<CategoryWithProducts>(categoriesWithProducts);
+                Message = string.Empty;
+            }
+            catch (System.Exception ex)
+            {
+                // If the database is down or unreachable, show a user-friendly message and keep the UI usable.
+                Categories = new ObservableCollection<CategoryWithProducts>();
+                Message = "Unable to load menu: database unavailable. Run PostgreSQL or check connection settings.";
+                try
+                {
+                    var logPath = System.IO.Path.Combine(System.AppDomain.CurrentDomain.BaseDirectory, "db-errors.log");
+                    var logLine = $"[{System.DateTime.Now:O}] {ex}{System.Environment.NewLine}";
+                    System.IO.File.AppendAllText(logPath, logLine);
+                }
+                catch
+                {
+                    // Swallow any logging errors to avoid impacting the UI.
+                }
+            }
         }
 
         private bool CanExecuteAddToCart(object parameter)
