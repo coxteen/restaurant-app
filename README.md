@@ -2,7 +2,7 @@
 
 # Restaurant App
 
-**A Windows desktop restaurant app for browsing a menu, placing orders, and managing restaurant operations from one place.**
+**A Windows desktop restaurant app for browsing a menu, placing orders, and managing restaurant operations from one place**
 
 [![Platform](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)](https://www.microsoft.com/windows)
 [![Framework](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
