@@ -96,6 +96,14 @@ CREATE TABLE order_items (
     CHECK (productid IS NOT NULL OR menuid IS NOT NULL) -- At least one must be non-null
 );
 
+CREATE TABLE cart_items (
+    userid INTEGER NOT NULL REFERENCES users(userid) ON DELETE CASCADE,
+    productid INTEGER NOT NULL REFERENCES products(productid) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK (quantity > 0),
+    PRIMARY KEY (userid, productid)
+);
+
+
 -- Create indexes for better performance
 CREATE INDEX idx_products_category ON products(categoryid);
 CREATE INDEX idx_menus_category ON menus(categoryid);
